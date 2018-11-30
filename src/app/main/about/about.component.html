@@ -37,35 +37,6 @@
                     </div>
                 </div>
             </form>
-            <!-- <form [formGroup]="allergyForm">
-                <div formArrayName="allergies">
-                    <div *ngFor="let item of allergyData.controls; let pointIndex=index" [formGroupName]="pointIndex" class="large-1280" fxLayout="column" fxLayout.gt-md="row">
-                        <div class="content-items" fxFlex="31" fxFlex.gt-xs="31" fxFlex.gt-sm="31">
-                            <input formControlName="substance" class="abtxt" type="text"  placeholder="Enter text" />
-                        </div>
-                        <div class="content-items" fxFlex="25" fxFlex.gt-xs="25" fxFlex.gt-sm="25">
-                            <select  class="abtxt" name="one" formControlName="category">
-                                <option value="" disabled="disabled" >Select</option>
-                                <option *ngFor="let cat of categories" [ngValue]="cat.name">{{cat.name}}
-                            </select>
-                        </div>
-                        <div class="content-items" fxFlex="19" fxFlex.gt-xs="19" fxFlex.gt-sm="19">
-                            <select  class="abtxt" name="one" formControlName="severity">
-                                <option value="" disabled="disabled" >Select</option>
-                                <option *ngFor="let severity of severities" [ngValue]="severity.description">{{severity.description}}
-                            </select>
-                        </div>
-                        <div class="content-items" fxFlex="25" fxFlex.gt-xs="25" fxFlex.gt-sm="25">
-                            <input formControlName="reactions" class="abtxt" type="text" placeholder="Enter text" />
-                        </div> 
-                    </div>
-                </div>
-                <div fxLayout="column" fxLayout.gt-md="row"  fxLayoutAlign="center center">
-                    <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100" fxLayoutAlign="center center">
-                        <button mat-raised-button (click)="addMore()" class="btn-mcolor-green btn-addmore">ADD MORE</button>
-                    </div>
-                </div>
-            </form> -->
             {{allergyData.value | json}}
             <div fxLayout="column" fxLayout.gt-md="row"  fxLayoutAlign="center center">
                 <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100" fxLayoutAlign="center center">

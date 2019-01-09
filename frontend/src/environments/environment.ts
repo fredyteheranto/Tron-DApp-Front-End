@@ -12,8 +12,7 @@ export const environment = {
     //Live Server
     /* serviceUrl: 'https://healthport.io/api/' */
     /* serviceUrl: 'https://api.healthport.io/' */
-    // serviceUrl: 'http://api.staging.healthport.io/'
-    serviceUrl: process.env.SERVICEURL
+    serviceUrl: 'http://api.staging.healthport.io/'
 
 };
 

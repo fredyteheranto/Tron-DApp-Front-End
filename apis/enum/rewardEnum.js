@@ -5,7 +5,8 @@ var RewardEnum = {
     PROCEDUREDOCUMENTREWARD: "Create Procedure History",
     MEDICATIONDOCUMENTREWARD: "Create Medication List",
     ALLDOCUMENTSREWARD: "Loyalty Bonus",
-    COMMISSIONDOCUMENTSUBMISSION: "Health Port Network Fee"
+    COMMISSIONDOCUMENTSUBMISSION: "Health Port Network Fee",
+    AIRDROPREWARD: "Airdrop"
 };
 
 module.exports = RewardEnum;

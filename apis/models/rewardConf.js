@@ -23,6 +23,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             default: 0
         },
+        reward_end_date:{
+            type: Sequelize.DATE,
+            allowNull: true
+        },
         max_users:{
             type: Sequelize.INTEGER,
             allowNull: true

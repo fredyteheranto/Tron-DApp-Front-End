@@ -12,8 +12,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
         },
         reward_amount: {
-            type: Sequelize.STRING,
-            unique: true,
+            type: Sequelize.INTEGER,
             allowNull: false,
         }
     });

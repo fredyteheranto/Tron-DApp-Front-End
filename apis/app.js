@@ -19,6 +19,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var userRoute = require('./http/routes/userRoutes');
 
+var airDrop = require('./cron/airdrop');
+
 app.use('/user', userRoute);
 
 global.healthportDb.authenticate()

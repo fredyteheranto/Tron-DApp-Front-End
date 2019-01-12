@@ -14,7 +14,8 @@ module.exports = (sequelize, Sequelize) => {
                 RewardEnum.ALLDOCUMENTSREWARD,
                 RewardEnum.ALLERGYDOCUMENTREWARD,
                 RewardEnum.MEDICATIONDOCUMENTREWARD,
-                RewardEnum.PROCEDUREDOCUMENTREWARD
+                RewardEnum.PROCEDUREDOCUMENTREWARD,
+                RewardEnum.AIRDROPREWARD
             ],
             allowNull: false,
             defaultValue: RewardEnum.SIGNUPREWARD
@@ -22,6 +23,10 @@ module.exports = (sequelize, Sequelize) => {
         reward_amount: {
             type: Sequelize.INTEGER,
             default: 0
+        },
+        reward_end_date:{
+            type: Sequelize.DATE,
+            allowNull: true
         },
         max_users:{
             type: Sequelize.INTEGER,

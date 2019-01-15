@@ -14,6 +14,10 @@ module.exports = (sequelize, Sequelize) => {
         reward_amount: {
             type: Sequelize.INTEGER,
             allowNull: false,
+        },
+        trx_hash: {
+            type: Sequelize.STRING,
+            allowNull: false,
         }
     });
     return air_drop_users;

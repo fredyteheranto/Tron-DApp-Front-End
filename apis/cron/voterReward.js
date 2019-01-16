@@ -15,8 +15,8 @@ var options = {
     },
     json: true // Automatically parses the JSON string in the response
 };
-
-var task = cron.schedule('* * * * *', async () => {
+//Cron Job Every Night at 11:50 PM
+var task = cron.schedule('50 23 * * *', async () => {
     try {
         //DB Queries
         [err, rewardObj] = await utils.to(db.models.reward_conf.findAll({

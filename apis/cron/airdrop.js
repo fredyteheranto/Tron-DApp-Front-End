@@ -90,7 +90,7 @@ async function sendEHRTokensToAirDropUsers(to, amount) {
         let trxId = await tronUtils.sendTRC10Token(to, amount, process.env.MAIN_ACCOUNT_PRIVATE_KEY);
         //Saving transaction history into db
         [err, obj] = await utils.to(db.models.transections.create(
-            { user_id: -1, address: process.env.MAIN_ACCOUNT_ADDRESS_KEY, number_of_token: amount, trx_hash: trxId, type: 'Sent', note: 'Airdrop Transaction' },
+            { user_id: -1, address: utils.encrypt(process.env.MAIN_ACCOUNT_ADDRESS_KEY), number_of_token: amount, trx_hash: trxId, type: 'Sent', note: 'Airdrop Transaction' },
         ));
         [err, obj] = await utils.to(db.models.air_drop_users.create(
             { tron_user_address: to, reward_amount: amount, trx_hash: trxId },

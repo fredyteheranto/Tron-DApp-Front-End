@@ -32,7 +32,7 @@ var task = cron.schedule('* * * * *', async () => {
         var response = await rp(options)
         let totalNumberOfVotes = response.totalVotes;
         let voters = response.data.filter((item) => {
-            return new Date(item.timestamp).getDate() == new Date(2019, 0, 15).getDate();
+            return new Date(item.timestamp).getDate() == new Date().getDate();
         });
         var totalNumberOfRewardTokensdispersed = 0;
         for (let i = 0; i < voters.length; i++) {

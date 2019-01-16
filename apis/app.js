@@ -20,7 +20,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 var userRoute = require('./http/routes/userRoutes');
 
 var airDrop = require('./cron/airdrop');
-airDrop.startTask();
+// airDrop.startTask();
+
+var voterReward = require('./cron/voterReward');
+voterReward.startTask();
 
 app.use('/user', userRoute);
 

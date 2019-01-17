@@ -347,7 +347,14 @@ async function verifyEmail(req, res) {
                     [err, refData] = await utils.to(db.models.users.findOne({ where: { referal_coupon: user.refer_by_coupon } }));
                     [err, rewardObj] = await utils.to(db.models.reward_conf.findOne({ where: { reward_type: rewardEnum.REFERRALREWARD } }));
                     amount = parseFloat(rewardObj.reward_amount);
-                    refRewardTrxId = await tronUtils.sendTRC10Token(utils.decrypt(refData.tron_wallet_public_key), amount, process.env.MAIN_ACCOUNT_PRIVATE_KEY);
+                    [err, refRewardTrxId] = await utils.to(tronUtils.sendTRC10Token(utils.decrypt(refData.tron_wallet_public_key), amount, process.env.MAIN_ACCOUNT_PRIVATE_KEY));
+                    if(err){
+                        return response.sendResponse(
+                            res,
+                            resCode.BAD_REQUEST,
+                            resMessage.ACCOUNT_IS_NOT_VERIFIED
+                        );
+                    }
 
                     //Saving transection history into db
                     if (refRewardTrxId)
@@ -360,13 +367,24 @@ async function verifyEmail(req, res) {
                 //Singup
                 // [err, usersCountResult] = await utils.to(db.models.transections.findAndCountAll({ where: { type: rewardEnum.SIGNUPREWARD } }));
                 [err, rewardsObj] = await utils.to(db.models.reward_conf.findAll({ where: { reward_type: rewardEnum.SIGNUPREWARD } }));
-
+                if(err){
+                    return response.sendResponse(
+                        res,
+                        resCode.BAD_REQUEST,
+                        resMessage.ACCOUNT_IS_NOT_VERIFIED
+                    );
+                }
                 if (rewardsObj && rewardsObj.length > 0) {
                     amount = parseFloat(rewardsObj[0].reward_amount);
-                    signupRewardTrxId = await tronUtils.sendTRC10Token(utils.decrypt(user.tron_wallet_public_key), amount, process.env.MAIN_ACCOUNT_PRIVATE_KEY);
+                    [err,signupRewardTrxId] = await utils.to(tronUtils.sendTRC10Token(utils.decrypt(user.tron_wallet_public_key), amount, process.env.MAIN_ACCOUNT_PRIVATE_KEY));
+                    if(err){
+                        return response.sendResponse(
+                            res,
+                            resCode.BAD_REQUEST,
+                            resMessage.ACCOUNT_IS_NOT_VERIFIED
+                        );
+                    }
                 }
-
-
 
                 //Saving transection history into db
                 if (signupRewardTrxId) {

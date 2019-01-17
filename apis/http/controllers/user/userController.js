@@ -136,6 +136,9 @@ async function signIn(req, res) {
         if (!regex.emailRegex.test(email))
             return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.INVALID_EMAIL_ADDRESS);
 
+        //Jwt token generating
+        [err, token] = await utils.to(tokenGenerator.createToken({ email: user.email, user_id: user.id }));
+
         //Finding record from db    
         [err, user] = await utils.to(db.models.users.findOne(
             {
@@ -145,14 +148,11 @@ async function signIn(req, res) {
                 }
             }));
         if (user == null) return response.sendResponse(res, resCode.NOT_FOUND, resMessage.USER_NOT_FOUND);
-        if (!user.email_confirmed) return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.EMAIL_CONFIRMATION_REQUIRED);
+        if (!user.email_confirmed) return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.EMAIL_CONFIRMATION_REQUIRED, null, token);
 
         //Decrypting password
         [err, passwordCheck] = await utils.to(bcrypt.compare(password, user.password));
         if (!passwordCheck) return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.PASSWORD_INCORRECT);
-
-        //Jwt token generating
-        [err, token] = await utils.to(tokenGenerator.createToken({ email: user.email, user_id: user.id }));
 
         //Returing successful response with data
         let data = {
@@ -348,7 +348,7 @@ async function verifyEmail(req, res) {
                     [err, rewardObj] = await utils.to(db.models.reward_conf.findOne({ where: { reward_type: rewardEnum.REFERRALREWARD } }));
                     amount = parseFloat(rewardObj.reward_amount);
                     [err, refRewardTrxId] = await utils.to(tronUtils.sendTRC10Token(utils.decrypt(refData.tron_wallet_public_key), amount, process.env.MAIN_ACCOUNT_PRIVATE_KEY));
-                    if(err){
+                    if (err) {
                         return response.sendResponse(
                             res,
                             resCode.BAD_REQUEST,
@@ -367,7 +367,7 @@ async function verifyEmail(req, res) {
                 //Singup
                 // [err, usersCountResult] = await utils.to(db.models.transections.findAndCountAll({ where: { type: rewardEnum.SIGNUPREWARD } }));
                 [err, rewardsObj] = await utils.to(db.models.reward_conf.findAll({ where: { reward_type: rewardEnum.SIGNUPREWARD } }));
-                if(err){
+                if (err) {
                     return response.sendResponse(
                         res,
                         resCode.BAD_REQUEST,
@@ -376,8 +376,8 @@ async function verifyEmail(req, res) {
                 }
                 if (rewardsObj && rewardsObj.length > 0) {
                     amount = parseFloat(rewardsObj[0].reward_amount);
-                    [err,signupRewardTrxId] = await utils.to(tronUtils.sendTRC10Token(utils.decrypt(user.tron_wallet_public_key), amount, process.env.MAIN_ACCOUNT_PRIVATE_KEY));
-                    if(err){
+                    [err, signupRewardTrxId] = await utils.to(tronUtils.sendTRC10Token(utils.decrypt(user.tron_wallet_public_key), amount, process.env.MAIN_ACCOUNT_PRIVATE_KEY));
+                    if (err) {
                         return response.sendResponse(
                             res,
                             resCode.BAD_REQUEST,

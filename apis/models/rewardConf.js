@@ -15,7 +15,8 @@ module.exports = (sequelize, Sequelize) => {
                 RewardEnum.ALLERGYDOCUMENTREWARD,
                 RewardEnum.MEDICATIONDOCUMENTREWARD,
                 RewardEnum.PROCEDUREDOCUMENTREWARD,
-                RewardEnum.AIRDROPREWARD
+                RewardEnum.AIRDROPREWARD,
+                RewardEnum.SUPERREPRESENTATIVEREWARD
             ],
             allowNull: false,
             defaultValue: RewardEnum.SIGNUPREWARD
@@ -29,6 +30,10 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: true
         },
         max_users:{
+            type: Sequelize.INTEGER,
+            allowNull: true
+        },
+        max_amount:{
             type: Sequelize.INTEGER,
             allowNull: true
         }

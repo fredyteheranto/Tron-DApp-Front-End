@@ -4,5 +4,5 @@ export const environment = {
     //Live Environment
     //serviceUrl: 'https://api.healthport.io/',
     //Staging Environment
-    serviceUrl: 'http://api.staging.healthport.io/'
+    serviceUrl: 'https://api.staging.healthport.io/'
 };

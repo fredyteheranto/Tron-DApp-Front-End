@@ -110,7 +110,7 @@ export class MyaccountComponent implements OnInit {
         'received':true,
         'new account':true,
         'loyalty bonus':true,
-        'referral reward':true,
+        'referal reward':true,
         'create allergy list':true,
         'create medication list':true,
         'create procedure history':true,

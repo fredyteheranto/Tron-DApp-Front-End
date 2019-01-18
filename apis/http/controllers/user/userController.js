@@ -120,7 +120,7 @@ async function signIn(req, res) {
         let email = req.body.email;
         let password = req.body.password;
         let captcha_key = req.body.captchaKey;
-        let err, user, token;
+        let err, user, token, passCode;
 
         //Validating captcha only when environment is not dev
         if (process.env.NODE_ENV != 'dev') {
@@ -136,9 +136,6 @@ async function signIn(req, res) {
         if (!regex.emailRegex.test(email))
             return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.INVALID_EMAIL_ADDRESS);
 
-        //Jwt token generating
-        [err, token] = await utils.to(tokenGenerator.createToken({ email: user.email, user_id: user.id }));
-
         //Finding record from db    
         [err, user] = await utils.to(db.models.users.findOne(
             {
@@ -148,7 +145,20 @@ async function signIn(req, res) {
                 }
             }));
         if (user == null) return response.sendResponse(res, resCode.NOT_FOUND, resMessage.USER_NOT_FOUND);
-        if (!user.email_confirmed) return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.EMAIL_CONFIRMATION_REQUIRED, null, token);
+        if (!user.email_confirmed) {
+            [err, passCode] = await utils.to(db.models.pass_codes.findOne(
+                {
+                    where: { user_id: user.id, type: 'signup' },
+                    order: [['createdAt', 'DESC']]
+                }));
+
+            [err, token] = await utils.to(tokenGenerator.createToken({ email: user.email, user_id: user.id, pass_code: passCode.pass_code }));
+
+            return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.EMAIL_CONFIRMATION_REQUIRED, null, token);
+        }
+
+        //Jwt token generating
+        [err, token] = await utils.to(tokenGenerator.createToken({ email: user.email, user_id: user.id }));
 
         //Decrypting password
         [err, passwordCheck] = await utils.to(bcrypt.compare(password, user.password));

@@ -83,6 +83,7 @@ export class SendComponent implements OnInit {
   handleQrCodeResult(resultString: string) {
     this.f.address.setValue(resultString);
     this.displayCamDiv = false;
+    this.f.address.enable();
     this.currentDevice = undefined;
   }
 
@@ -93,14 +94,20 @@ export class SendComponent implements OnInit {
       this.currentDevice = undefined;
       return;
     }
-    if(this.hasDevices){
+    if(this.hasDevices && this.hasPermission){
       this.displayCamDiv = true;
       this.f.address.reset();
       this.f.address.disable();
       this.currentDevice = this.availableDevices[0];
     }
-    else {
+    else if (!this.hasPermission) {
+      this.snackBar.open("Permission denied for camera!");
+    }
+    else if(!this.hasDevices) {
       this.snackBar.open("Camera not found!");
+    }
+    else {
+      this.snackBar.open("Video device connection not established!");
     }
   }
   

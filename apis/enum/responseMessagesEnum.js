@@ -39,6 +39,7 @@ var ResponseMessagesEnum = {
     TRON_IS_NOT_CONNECTED: "Tron node is not connected.",
     TRON_BALANCE_IS_ZERO: "Your have insufficient Tron balance.",
     TERMS_CONDITIONS:"Please check terms and conditions.",
+    TO_FROM_ADDRESS_ARE_SAME:"Transection to your own account is not allowed.",
     USER_ADDED_SUCCESSFULLY: "User added successfully.",
     USER_UPDATED_SUCCESSFULLY: "User updated successfully.",
     USER_ALREADY_EXIST: "User already exist.",

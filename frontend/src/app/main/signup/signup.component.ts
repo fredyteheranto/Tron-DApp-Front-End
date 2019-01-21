@@ -81,7 +81,7 @@ export class SignupComponent implements OnInit {
 
       this.signupForm = this.fb.group({
         email: ['', [Validators.required,Validators.email]],
-        name: ['', [Validators.required]],
+        name: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]{2,20}$')]],
         password: ['', [Validators.required, Validators.pattern('((?=.*\\d)(?=.*[A-Z])(?=.*\\W).{8,30})')]],
         confirmpassword: ['',[Validators.required, Validators.pattern('((?=.*\\d)(?=.*[A-Z])(?=.*\\W).{8,30})'), compareValidator('password')]],
         isAgree: [false,[Validators.requiredTrue]]

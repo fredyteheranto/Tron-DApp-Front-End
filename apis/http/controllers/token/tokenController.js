@@ -37,10 +37,13 @@ async function sendToken(req, res) {
 
         //Checking weather receiver account is active or not.
         let bandwidthTo = await tronUtils.getBandwidth(to);
-        if(bandwidthTo == 0) return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.ACCOUNT_IS_NOT_ACTIVE)
-        
+        if (bandwidthTo == 0) return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.ACCOUNT_IS_NOT_ACTIVE)
+
         //Sending token
         try {
+            if (utils.checkaddresses(to, utils.decrypt(from)))
+                return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.TO_FROM_ADDRESS_ARE_SAME)
+
             trxId = await tronUtils.sendTRC10Token(to, amount, privateKey);
         } catch (error) {
             console.log(error);
@@ -137,7 +140,7 @@ async function getBalance(req, res) {
         balance = await tronUtils.getTRC10TokenBalance(privateKey, publickKey);
         bandwidth = await tronUtils.getBandwidth(utils.decrypt(user.tron_wallet_public_key));
         //Returing successful response with balance
-        return response.sendResponse(res, resCode.SUCCESS, resMessage.SUCCESS, {balance: balance, bandwidth:bandwidth});
+        return response.sendResponse(res, resCode.SUCCESS, resMessage.SUCCESS, { balance: balance, bandwidth: bandwidth });
 
     } catch (error) {
         console.log(error);

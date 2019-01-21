@@ -71,8 +71,8 @@ export class HomeComponent {
         this.ncount = 0;
 
         this.contactForm = this.fb.group({
-            fname: ['', [Validators.required, Validators.pattern('^[a-zA-Z]{2,20}$')]],
-            lname: ['', [Validators.required, Validators.pattern('^[a-zA-Z]{2,20}$')]],
+            fname: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]{2,20}$')]],
+            lname: ['', [Validators.required, Validators.pattern('^[a-zA-Z ]{2,20}$')]],
             email: ['', [Validators.required, Validators.email]],
             phone: ['', Validators.pattern('^[0-9 ()+-]+$')],
             message: ['', Validators.required]

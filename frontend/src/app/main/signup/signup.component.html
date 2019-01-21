@@ -12,9 +12,10 @@
                 <div fxLayout="column" fxLayout.gt-md="row">
                     <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
                         <p>NAME</p>
-                        <input class="abtxt" type="text"  name="name" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
+                        <input class="abtxt" type="text" pattern="^[a-zA-Z ]{2,20}$" name="name" formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
                         <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
                             <div *ngIf="f.name.errors.required">Name is required</div>
+                            <div *ngIf="f.name.errors.pattern">Alphabets from 2-20 characters length are allowed</div>
                         </div>
                     </div>
                     <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">

@@ -24,6 +24,7 @@ const db = global.healthportDb;
 
 async function signUp(req, res) {
     try {
+        let role = req.body.role;
         let name = req.body.name;
         let email = req.body.email;
         let is_agree = req.body.isAgree;
@@ -31,6 +32,7 @@ async function signUp(req, res) {
         let captcha_key = req.body.captchaKey;
         let refer_by_coupon = req.body.referby;
         let refer_destination = req.body.destination;
+        
         let err, user, token, account, passCode;
 
         //Checking terms and conditions
@@ -44,8 +46,8 @@ async function signUp(req, res) {
             console.log(err);
         }
 
-        //Checking empty email and password 
-        if (!(email && password && name))
+        //Checking empty email, password and role 
+        if (!(email && password && name && role))
             return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.REQUIRED_FIELDS_EMPTY);
 
         //Reguler expression testing for email
@@ -65,6 +67,7 @@ async function signUp(req, res) {
         //Saving user record in db 
         [err, user] = await utils.to(db.models.users.create(
             {
+                role: role,
                 name: name,
                 email: email,
                 password: passwordHash,
@@ -76,9 +79,6 @@ async function signUp(req, res) {
             }));
         if (err) return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.USER_ALREADY_EXIST);
 
-        //Sending Trons to newly created account
-        //let sendTrx =  await tronUtils.sendTrx(account.address.base58, 2*1000000, "44BD8278E103365FAAD929A2376A2CC5B3674CF2358A056465E0CE6BA9949DB0");    
-        //console.log(sendTrx);
         var spilt_name = name.split(' ');
         if (spilt_name.length == 2) {
             mailChimpUtil(email, spilt_name[0], spilt_name[1]);
@@ -166,6 +166,7 @@ async function signIn(req, res) {
 
         //Returing successful response with data
         let data = {
+            role: user.role,
             name: user.name,
             user_id: user.id,
             email: user.email,

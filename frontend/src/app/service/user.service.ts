@@ -22,7 +22,7 @@ export class UserService {
   signUp(userModel: User, captchaKey) {
     let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
 
-    let data = { name:userModel.name, email: userModel.email, password: userModel.password, isAgree:userModel.isAgree, referby: userModel.referby, destination: userModel.via, captchaKey: captchaKey };
+    let data = { name:userModel.name, email: userModel.email, password: userModel.password, isAgree:userModel.isAgree, referby: userModel.referby, destination: userModel.via, role: userModel.role, captchaKey: captchaKey };
 
     return this.httpClient.post<responseData>(environment.serviceUrl + "user/signup", data, { headers: headers });
   }

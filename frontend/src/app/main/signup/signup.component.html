@@ -45,6 +45,13 @@
                             <div *ngIf="f.confirmpassword.errors['compare']">Password and confirmation password don't match</div>
                         </div>
                     </div>
+                    <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
+                        <p>SIGNUP AS</p>
+                        <select required class="abtxt" name="one" formControlName="role">
+                            <option value="Patient" selected="selected">Patient</option>
+                            <option value="Provider" >Provider</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="chk-div" fxLayout="column" fxLayout.gt-md="row">
                     <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">

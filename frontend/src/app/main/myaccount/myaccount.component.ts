@@ -91,6 +91,7 @@ export class MyaccountComponent implements OnInit {
     email_share: string;
     //variable will be used to display UI components for specific users
     user_admin: boolean = false;
+    user_role : string;
     // chart colors for ngx charts
     gray_color: String;
     white_color: String;
@@ -182,6 +183,7 @@ export class MyaccountComponent implements OnInit {
         this.username = this.data['name'];
         this.user_id = this.data['user_id'];
         this.ntotal = this.data['total_tokens'];
+        this.user_role = this.data['role'];
 
         this.referal_coupon = this.data['referal_coupon'];
         this.wallet_address = this.data['wallet_address'];

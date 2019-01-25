@@ -16,6 +16,7 @@ import { Meta, Title } from '@angular/platform-browser';
 import { MatSnackBar, MatDialog, MatTooltip, MatDialogConfig, MatSpinner } from "@angular/material";
 import { ReceiveComponent } from './receive/receive.component';
 import { DetailsComponent } from './details/details.component';
+import { ShareComponent } from './share/share.component'
 import { FuseCopierService } from '@fuse/services/copier.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
@@ -307,6 +308,13 @@ export class MyaccountComponent implements OnInit {
         this.dialog.open(DetailsComponent, {
             width: '600px',
             data: item
+        });
+    }
+
+    shareProviderDialog(type) {
+        this.dialog.open(ShareComponent, {
+            width: '600px',
+            data: type
         });
     }
 

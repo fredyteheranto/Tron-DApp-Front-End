@@ -17,6 +17,8 @@ import { MyaccountComponent } from './myaccount.component';
 import { ReceiveComponent } from './receive/receive.component';
 import { DetailsComponent } from './details/details.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
+import { ShareComponent } from './share/share.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MatButtonModule, MatIconModule, MatCheckboxModule,MatTooltipModule, MatGridListModule, MatDialogModule, MatProgressSpinnerModule } from '@angular/material';
 
 const routes = [
@@ -32,10 +34,12 @@ const routes = [
         MyaccountComponent,
         SendComponent,
         ReceiveComponent,
-        DetailsComponent
+        DetailsComponent,
+        ShareComponent
     ],
     imports: [
         RouterModule.forChild(routes),
+        NgMultiSelectDropDownModule.forRoot(),
 
         ReactiveFormsModule,
         CommonModule,
@@ -70,7 +74,8 @@ const routes = [
     entryComponents: [
         SendComponent,
         ReceiveComponent,
-        DetailsComponent
+        DetailsComponent,
+        ShareComponent
     ]
 })
 

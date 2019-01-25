@@ -73,4 +73,20 @@ export class DocumentService {
     return this.httpClient.post<responseData>(environment.serviceUrl + "user/getFormSubmissionDates", data, { headers: headers });
   }
 
+  getProvidersList(userId,token, type) {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
+    headers= headers.set('authorization', token);
+    let data = {userId: userId, type: type};
+
+    return this.httpClient.post<responseData>(environment.serviceUrl + "user/getAllProviders", data, { headers: headers });
+  }
+
+  saveSharedProviderList(userId, token, list, type) {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
+    headers= headers.set('authorization', token);
+    let data = {userId: userId, shareWith: list, type: type};
+
+    return this.httpClient.post<responseData>(environment.serviceUrl + "user/shareListWithProviders", data, { headers: headers });
+  }
+
 }

@@ -94,10 +94,11 @@
                     <table class="table-type1" width="100%">
                         <thead>
                             <tr>
-                                <th class="left" width="31%">EXISTING RECORDS</th>
-                                <th class="left" width="24%">DATA SOURCE</th>
-                                <th class="center" width="20%">LAST UPDATED</th>
-                                <th class="center" width="25%">DOWNLOAD</th>
+                                <th class="left" width="30%">EXISTING RECORDS</th>
+                                <th class="left" width="15%">DATA SOURCE</th>
+                                <th class="center" width="15%">LAST UPDATED</th>
+                                <th class="center" width="20%">DOWNLOAD</th>
+                                <th class="center" width="20%">SHARE</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -114,6 +115,9 @@
                                         <mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner>
                                     </button>
                                 </td>
+                                <td class="download center">
+                                    <button mat-raised-button class="btn-mcolor-green" (click)="shareProviderDialog('allergies')">SHARE</button>
+                                </td>
                             </tr>
                             <tr *ngIf="mfLSDate !=='01/01/1970'">
                                 <td class="description left">MEDICATION LIST</td>
@@ -125,6 +129,9 @@
                                         <mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner>
                                     </button>
                                 </td>
+                                <td class="download center">
+                                    <button mat-raised-button class="btn-mcolor-green" (click)="shareProviderDialog('medications')">SHARE</button>
+                                </td>
                             </tr>
                             <tr *ngIf="pfLSDate !=='01/01/1970'">
                                 <td class="description left">PROCEDURE HISTORY</td>
@@ -135,6 +142,9 @@
                                     <button mat-raised-button class="btn-mcolor-cray" *ngIf="pSpin">
                                         <mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner>
                                     </button>
+                                </td>
+                                <td class="download center">
+                                    <button mat-raised-button class="btn-mcolor-green" (click)="shareProviderDialog('procedures')">SHARE</button>
                                 </td>
                             </tr>
                             <div *ngIf="user_admin">
@@ -181,6 +191,7 @@
                                     <p class="date">{{afLSDate}}
                                         <a href="javascript:void(0)" class="download-href" *ngIf="!aSpin" (click)="downloadPDF('getAllergyList','aSpin')">OPEN</a>
                                         <a href="javascript:void(0)" class="download-href" *ngIf="aSpin" ><mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner></a>
+                                        <a href="javascript:void(0)" class="share-provider-href" (click)="shareProviderDialog('allergies')">SHARE</a>
                                     </p>
                                 </td>
                             </tr>
@@ -190,6 +201,7 @@
                                     <p class="date">{{mfLSDate}}
                                         <a href="javascript:void(0)" class="download-href" *ngIf="!mSpin" (click)="downloadPDF('getMedicationList','mSpin')">OPEN</a>
                                         <a href="javascript:void(0)" class="download-href" *ngIf="mSpin" ><mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner></a>
+                                        <a href="javascript:void(0)" class="share-provider-href" (click)="shareProviderDialog('medications')">SHARE</a>
                                     </p>
                                 </td>
                             </tr>
@@ -199,6 +211,7 @@
                                     <p class="date">{{pfLSDate}}
                                         <a href="javascript:void(0)" class="download-href" *ngIf="!pSpin" (click)="downloadPDF('getProcedureHistory','pSpin')">OPEN</a>
                                         <a href="javascript:void(0)" class="download-href" *ngIf="pSpin" ><mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner></a>
+                                        <a href="javascript:void(0)" class="share-provider-href" (click)="shareProviderDialog('procedures')">SHARE</a>
                                     </p>
                                 </td>
                             </tr>

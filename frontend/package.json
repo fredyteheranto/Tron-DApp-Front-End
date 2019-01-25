@@ -57,6 +57,7 @@
     "just-detect-adblock": "^1.0.0",
     "lodash": "4.17.10",
     "moment": "2.22.2",
+    "ng-multiselect-dropdown": "^0.2.3",
     "ng-pick-datetime": "^6.0.16",
     "ng-recaptcha": "^4.2.1",
     "ng2-charts": "1.6.0",

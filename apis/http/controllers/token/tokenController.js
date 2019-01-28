@@ -260,13 +260,93 @@ async function getReferralsByUser(req, res) {
     }
 }
 
+var rp = require('request-promise');
+var options = {
+    uri: '',
+    headers: {
+        'User-Agent': 'Request-Promise'
+    },
+    json: true // Automatically parses the JSON string in the response
+};
+const apiUrlForVotersList = `${process.env.TRON_SCAN_URL}api/vote`;
 //This route is for server testing purpose only
 async function getEnv(req, res) {
+    return
+    try {
+        //DB Queries
+        [err, rewardObj] = await utils.to(db.models.reward_conf.findAll({
+            where: {
+                reward_type: rewardEnum.SUPERREPRESENTATIVEREWARD
+            }
+        }));
+        if (!rewardObj || rewardObj.length == 0) {
+            return;
+        }
+        //Getting Transactions which are on TRON Network
+        options.uri = `${apiUrlForVotersList}?limit=999999&candidate=${process.env.COMMISSION_ACCOUNT_ADDRESS_KEY}`;
+        var response = await rp(options)
+        let totalNumberOfVotes = response.totalVotes;
+
+        //Getting reward data from db
+        [err, rewardData] = await utils.to(db.models.voter_rewards.findAll({}));
+
+        for (let i = 0; i < response.data.length; i++) {
+            let cycleNo = getCycleNoByTime(response.data[i].timestamp);
+            let matchedData = rewardData.filter(x => x.voter_address == response.data[i].voterAddress);
+            if (matchedData.length == 1) {
+                if (!(matchedData[0].votes == response.data[i].votes)) {
+                    [err, update] = await utils.to(db.models.voter_rewards.create({
+                        candidate_address: response.data[i].candidateAddress,
+                        voter_address: response.data[i].voterAddress,
+                        votes: response.data[i].votes - matchedData[0].votes,
+                        time_stamp: response.data[i].timestamp,
+                        cycle_no: cycleNo
+                    }));
+                }
+            } else {
+                [err, added] = await utils.to(db.models.voter_rewards.create({
+                    candidate_address: response.data[i].candidateAddress,
+                    voter_address: response.data[i].voterAddress,
+                    votes: response.data[i].votes,
+                    time_stamp: response.data[i].timestamp,
+                    cycle_no: cycleNo
+                }));
+            }
+        };
+        //Reward distribution.
+        [err, rewardData] = await utils.to(db.models.voter_rewards.findAll({}));
+        var totalNumberOfRewardTokensdispersed = 0;
+        let currentCycle = getCycleNoByTime(new Date());
+        for (let i = 0; i < rewardData.length; i++) {
+            if (currentCycle == rewardData[i].cycle_no) {
+                let votePercentageOfAUser = ((rewardData[i].votes / totalNumberOfVotes) * 100);
+                let numberOfRewardAmount = Math.ceil((votePercentageOfAUser * (rewardObj[0].max_amount) / 4) / 100);
+                totalNumberOfRewardTokensdispersed = numberOfRewardAmount;
+                if (totalNumberOfRewardTokensdispersed < (rewardObj[0].max_amount)/4) {
+                    await sendEHRTokensToAirVoterUsers(rewardData[i].voter_address, numberOfRewardAmount);
+                } else {
+                    console.log(`${new Date()} Quota Complete`);
+                    break;
+                }
+            }
+        }
+    }
+    catch (exp) {
+        console.log(exp);
+    }
 
     //let transection = await tronUtils.createSmartContract();
-    return response.sendResponse(res, resCode.SUCCESS, transection);
+    //return response.sendResponse(res, resCode.SUCCESS, transection);
 }
+function getCycleNoByTime(datetime) {
+    var hours = new Date(datetime).getUTCHours();
+    if (hours >= 0 && hours < 6) return 1;
+    if (hours > 6 && hours < 12) return 2;
+    if (hours > 12 && hours < 18) return 3;
+    if (hours > 18 && hours < 24) return 4;
 
+
+}
 module.exports = {
     sendToken,
     getBalance,

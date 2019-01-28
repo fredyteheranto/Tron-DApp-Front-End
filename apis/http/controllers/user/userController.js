@@ -120,6 +120,7 @@ async function signIn(req, res) {
         let email = req.body.email;
         let password = req.body.password;
         let captcha_key = req.body.captchaKey;
+        
         let err, user, token, passCode;
 
         //Validating captcha only when environment is not dev
@@ -188,6 +189,7 @@ async function forgetPassword(req, res) {
     try {
         let email = req.body.email;
         let captcha_key = req.body.captchaKey;
+        
         let err, user, token, foundPasscode, passcodeCreateTime, timeDifferInMin, mailSent;
 
         let passcode = passcodeGenerator.generate({ length: 14, numbers: true });
@@ -259,6 +261,7 @@ async function confirmForgotPassword(req, res) {
         let passcode = req.auth.pass_code;
         let password = req.body.password;
         let captcha_key = req.body.captchaKey;
+        
         let err, data;
 
         //Validating captcha only when environment is not dev
@@ -320,6 +323,7 @@ async function verifyEmail(req, res) {
     try {
         let email = req.auth.email;
         let passcode = req.auth.pass_code;
+        
         let err, user;
 
         //Finding user record from db
@@ -430,6 +434,7 @@ async function resendLinkEmail(req, res) {
         let passcode = req.auth.pass_code;
         let email = req.auth.email;
         let user_id = req.auth.user_id;
+        
         let err, data, foundPasscode;
 
         //Checking if user already exists

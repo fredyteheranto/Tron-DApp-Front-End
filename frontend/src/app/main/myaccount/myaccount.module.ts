@@ -18,8 +18,9 @@ import { ReceiveComponent } from './receive/receive.component';
 import { DetailsComponent } from './details/details.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ShareComponent } from './share/share.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { MatButtonModule, MatIconModule, MatCheckboxModule,MatTooltipModule, MatGridListModule, MatDialogModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatCheckboxModule,MatTooltipModule, MatGridListModule, MatDialogModule, MatTableModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule } from '@angular/material';
 
 const routes = [
     {
@@ -52,13 +53,18 @@ const routes = [
         MatTooltipModule,
         NgxChartsModule,
         MatDialogModule,
+        MatTableModule,
         MatProgressSpinnerModule,
+        MatPaginatorModule, 
+        MatSortModule,
 
         TranslateModule,
 
         FuseSharedModule,
 
-        ShareModule
+        ShareModule,
+
+        NgxDatatableModule
     ],
     exports: [
         MyaccountComponent

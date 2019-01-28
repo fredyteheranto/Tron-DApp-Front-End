@@ -13,16 +13,21 @@ import { WalletService } from '../../service/wallet.service';
 import { DocumentService } from '../../service/document.service';
 import { SendComponent } from './send/send.component';
 import { Meta, Title } from '@angular/platform-browser';
-import { MatSnackBar, MatDialog, MatTooltip, MatDialogConfig, MatSpinner } from "@angular/material";
+import { MatSnackBar, MatDialog,  MatPaginator,MatCheckbox , MatTableDataSource , MatTooltip, MatDialogConfig, MatSpinner } from "@angular/material";
 import { ReceiveComponent } from './receive/receive.component';
 import { DetailsComponent } from './details/details.component';
-import { ShareComponent } from './share/share.component'
+import { ShareComponent } from './share/share.component';
 import { FuseCopierService } from '@fuse/services/copier.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import adBlocker from 'just-detect-adblock'
 
-
+export interface UserData {
+    type: string,
+    name: string,
+    email: string,
+    user_id: number
+}
 
 @Component({
     selector: 'myaccount',
@@ -117,6 +122,18 @@ export class MyaccountComponent implements OnInit {
         'create medication list':true,
         'create procedure history':true,
     }
+
+    //Datatable entries for provider
+    displayedColumns: string[] = ['type', 'name', 'email', 'user_id'];
+    dataSource: MatTableDataSource<UserData>;
+    providerDataLength: number;
+    patientName: string;
+    providerData: any;
+    allergiesCheck: boolean = false;
+    medicationsCheck: boolean = false;
+    proceduresCheck: boolean = false;
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+
 	/**
      * Constructor
      *
@@ -155,7 +172,9 @@ export class MyaccountComponent implements OnInit {
         ], true);
 
         this.pdfImage.src = 'assets/sia/images/logos/splash-logo.png';
+
     }
+
 
     colorScheme = {
         domain: ['#00b0e0', '#A10A28', '#C7B42C', '#AAAAAA']
@@ -164,6 +183,8 @@ export class MyaccountComponent implements OnInit {
     view: any[] = [700, 400];
 
     ngOnInit() {
+        setTimeout(() => this.dataSource.paginator = this.paginator);
+
         //setting variables for signin signout for larger and smaller screens
         this.globalService.state = this.globalService.state;
         if (window.innerWidth < 1025) {
@@ -255,8 +276,28 @@ export class MyaccountComponent implements OnInit {
             }, error => {
                 console.log(error.error.message);
             });
+    
+        if(this.user_role == "Provider") {
+            this.documentService.getSharedDataForProvider(this.user_id, this.appToken)
+            .subscribe(res => {
+                if (res.code === 200) {
+                    this.providerData = res.data;
+                    this.providerData.forEach((item, index) => {
+                        item['index_'+index] = false;
+                    });
+                    this.providerDataLength = this.providerData.length;
+                    this.dataSource = new MatTableDataSource(this.providerData);
+                }
+                else {
+                    console.log(res.message);
+                }
+            }, error => {
+                console.log(error.error.message);
+            });
+        } 
 
     }
+
     addTspan(array) {
         array.forEach(e => {
             if(e.textContent.indexOf("Current") != -1) {
@@ -377,6 +418,111 @@ export class MyaccountComponent implements OnInit {
         }, 1000);
         return this.copyService.copyText(this.share_link);
     }
+    
+    checkBoxaFilter(e){
+        this.medicationsCheck = false;
+        this.proceduresCheck = false;
+        if(!e) {
+            this.dataSource = new MatTableDataSource(this.providerData);
+        }
+    }
+    checkBoxmFilter(e){
+        this.allergiesCheck = false;
+        this.proceduresCheck = false;
+        if(!e) {
+            this.dataSource = new MatTableDataSource(this.providerData);
+        }
+    }
+    checkBoxpFilter(e){
+        this.allergiesCheck = false;
+        this.medicationsCheck = false;
+        if(!e) {
+            this.dataSource = new MatTableDataSource(this.providerData);
+        }
+    }
+    checkBoxFilter(e,model){
+        /* switch(model) { 
+            case 'allergiesCheck': { 
+               this.medicationsCheck = false;
+               this.proceduresCheck = false; 
+               if(this.allergiesCheck) {
+                   this.applyFilter(model);
+               }
+               break; 
+            } 
+            case 'medicationsCheck': { 
+                this.allergiesCheck = false;
+                this.proceduresCheck = false; 
+                if(this.medicationsCheck) {
+                    this.applyFilter(model);
+                }
+               break; 
+            } 
+            case 'proceduresCheck': { 
+                this.allergiesCheck = false;
+                this.medicationsCheck = false; 
+                if(this.proceduresCheck) {
+                    this.applyFilter(model);
+                }
+               break; 
+            } 
+            default: { 
+               //statements; 
+               break; 
+            } 
+         } */
+    }
+
+    applyFilter(filterValue: string) {
+        this.dataSource.filter = filterValue.trim().toLowerCase();
+    
+        if (this.dataSource.paginator) {
+          this.dataSource.paginator.firstPage();
+        }
+    }
+    getPDFByProvider(type,id,name,i) {
+
+        this.providerData[i]['index_'+i] = true;
+        this.docModel.userId = this.user_id;
+        this.docModel.token = this.appToken;
+        this.patientName = name;
+        
+        let functionMap = {
+            allergies: 'getAllergyList',
+            medications: 'getMedicationList',
+            procedures: 'getProcedureHistory'
+        }
+        
+        this.documentService.getPDFByProvider(this.docModel,id,type)
+        .subscribe(res => {
+            if (res.code === 200) {
+                if (res.data) {
+                    this.providerData[i]['index_'+i] = false;
+                    this.snackBar.open('Record Not Found.');
+                }
+                else {
+                    this[functionMap[type]](res.data);
+                    this.providerData[i]['index_'+i] = false;
+                    this.snackBar.open(res.message);
+                }
+            }
+            else {
+                this.providerData[i]['index_'+i] = false;
+                this.snackBar.open(res.message);
+            }
+        }, error => {
+            this.providerData[i]['index_'+i] = false;
+            this.snackBar.open(error.error.message);
+            if (error.error.code == 401) {
+                localStorage.clear();
+                setTimeout(() => {
+                    this.globalService.state = "SIGNUP";
+                    window.innerWidth < 1025?this.navigation[6].title = this.globalService.state:false;
+                    this.router.navigate(['/login']);
+                }, 1500);
+            }
+        });
+    }
 
     downloadPDF(func, spin) {
 
@@ -457,8 +603,14 @@ export class MyaccountComponent implements OnInit {
                 columnWidth: 125
             }
         }
-        let name = this.capitalizeFirstLetter(this.username.toLowerCase()) + "'s Documented Allergy List";
-        this.generatePDF(doc, rows, col, style, this.calculateBoxDimensions(name), name);
+        if(this.user_role == "Provider") {
+            let name = this.capitalizeFirstLetter(this.patientName.toLowerCase()) + "'s Documented Allergy List";
+            this.generatePDF(doc, rows, col, style, this.calculateBoxDimensions(name), name);
+        }
+        else {
+            let name = this.capitalizeFirstLetter(this.username.toLowerCase()) + "'s Documented Allergy List";
+            this.generatePDF(doc, rows, col, style, this.calculateBoxDimensions(name), name);
+        }
 
     }
 
@@ -493,8 +645,15 @@ export class MyaccountComponent implements OnInit {
                 columnWidth: 145
             }
         }
-        let name = this.capitalizeFirstLetter(this.username.toLowerCase()) + "'s Home Medication List";
-        this.generatePDF(doc, rows, col, style, this.calculateBoxDimensions(name), name);
+
+        if(this.user_role == "Provider") {
+            let name = this.capitalizeFirstLetter(this.patientName.toLowerCase()) + "'s Home Medication List";
+            this.generatePDF(doc, rows, col, style, this.calculateBoxDimensions(name), name);
+        }
+        else {
+            let name = this.capitalizeFirstLetter(this.username.toLowerCase()) + "'s Home Medication List";
+            this.generatePDF(doc, rows, col, style, this.calculateBoxDimensions(name), name);
+        }
 
     }
 
@@ -531,10 +690,16 @@ export class MyaccountComponent implements OnInit {
             }
         }
         //maximum 10 characters limit in name
-        let name = this.capitalizeFirstLetter(this.username.toLowerCase()) + "'s Documented Procedure History";
-
-        /* this.generatePDF(doc,rows,col,style,[52,495,65],name); */
-        this.generatePDF(doc, rows, col, style, this.calculateBoxDimensions(name), name);
+        if(this.user_role == "Provider") {
+            let name = this.capitalizeFirstLetter(this.patientName.toLowerCase()) + "'s Documented Procedure History";
+            /* this.generatePDF(doc,rows,col,style,[52,495,65],name); */
+            this.generatePDF(doc, rows, col, style, this.calculateBoxDimensions(name), name);
+        }
+        else {
+            let name = this.capitalizeFirstLetter(this.username.toLowerCase()) + "'s Documented Procedure History";
+            /* this.generatePDF(doc,rows,col,style,[52,495,65],name); */
+            this.generatePDF(doc, rows, col, style, this.calculateBoxDimensions(name), name);
+        }
 
     }
 
@@ -743,7 +908,7 @@ export class MyaccountComponent implements OnInit {
     capitalizeFirstLetter(str) {
         let string = str.substr(0, str.indexOf(' '));
         if (string == "") {
-            string = this.username;
+            this.user_role == 'Provider'? string = this.patientName : string = this.username;
         }
         string = string.slice(0, 9);
         return string.charAt(0).toUpperCase() + string.slice(1);

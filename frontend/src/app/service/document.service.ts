@@ -65,6 +65,13 @@ export class DocumentService {
     return this.httpClient.post<responseData>(environment.serviceUrl + "user/getProcedureListByUser", data, { headers: headers });
   }
 
+  getPDFByProvider(docModel : Document, id, type) {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
+    headers= headers.set('authorization', docModel.token);
+    let data = {providerId: docModel.userId, userId: id, type: type};
+
+    return this.httpClient.post<responseData>(environment.serviceUrl + "user/getProviderSharedDocument", data, { headers: headers });
+  }
   getFormSubmittedLatestDates(userId , token) {
     let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
     headers= headers.set('authorization', token);
@@ -87,6 +94,14 @@ export class DocumentService {
     let data = {userId: userId, shareWith: list, type: type};
 
     return this.httpClient.post<responseData>(environment.serviceUrl + "user/shareListWithProviders", data, { headers: headers });
+  }
+
+  getSharedDataForProvider(userId,token) {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
+    headers= headers.set('authorization', token);
+    let data = { providerId: userId };
+
+    return this.httpClient.post<responseData>(environment.serviceUrl + "user/getProviderSharedData", data, { headers: headers });
   }
 
 }

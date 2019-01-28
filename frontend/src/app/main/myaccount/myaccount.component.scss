@@ -259,6 +259,22 @@
      #in-myaccount .contents .table-body .content-items {
         width: 100%;
     }
+    #in-myaccount .contents .table-title .abtxt {
+        color: #000;
+        background: #fff;
+        border: 1px solid #00010126;
+        font-size: 18px;
+        border-radius: 5px;
+        height: 50px;
+        padding: 10px;
+        margin-right: 50px;
+        margin-bottom: 10px;
+        width: 30%;
+    }
+    #in-myaccount .contents .table-body .content-items.flex-pos {
+        flex-direction: column !important;
+        align-items: flex-end !important;
+    }
      #in-myaccount .contents .bandwidth-label{
         position: absolute;
         margin-top: 155px;

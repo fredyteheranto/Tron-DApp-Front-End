@@ -3,12 +3,11 @@ const authorize = require('../../middlewares/authorization');
 const userController = require('../controllers/user/userController');
 const tokenController = require('../controllers/token/tokenController');
 const allergyController = require('../controllers/allergy/allergyController');
-const medicationController = require('../controllers/medication/medicationController');
 const procedureController = require('../controllers/procedure/procedureController');
+const medicationController = require('../controllers/medication/medicationController');
+const providerController = require('../controllers/provider/providerController')
 
-/*
-    Post Routes
-*/
+
 router.post('/signUp', userController.signUp);
 router.post('/signIn', userController.signIn);
 router.post('/forgetPassword', userController.forgetPassword);
@@ -23,7 +22,6 @@ router.post('/getTransectionsByAddress', authorize.authenticateToken, tokenContr
 router.post('/getFormSubmissionDates', authorize.authenticateToken, tokenController.getFormSubmissionDates);
 router.post('/getReferralsByUser', authorize.authenticateToken, tokenController.getReferralsByUser);
 
-
 router.post('/saveAllergyListByUser', authorize.authenticateToken, allergyController.saveAllergyListByUser);
 router.post('/getAllergyListByUser', authorize.authenticateToken, allergyController.getAllergyListByUser);
 
@@ -33,9 +31,13 @@ router.post('/getMedicationListByUser', authorize.authenticateToken, medicationC
 router.post('/saveProcedureByUser', authorize.authenticateToken, procedureController.saveProcedureByUser);
 router.post('/getProcedureListByUser', authorize.authenticateToken, procedureController.getProcedureListByUser);
 
-/*
-    Get Routes
-*/
+//Providers
+router.post('/getAllProviders', authorize.authenticateToken, providerController.getAllProviders);
+router.post('/shareListWithProviders', authorize.authenticateToken, providerController.shareListWithProviders);
+router.post('/getProviderSharedData', authorize.authenticateToken, providerController.getProviderSharedData);
+router.post('/getProviderSharedDocument', authorize.authenticateToken, providerController.getProviderSharedDocument);
+
+
 //This route is for server testing purpose only
 router.get('/getEnv', tokenController.getEnv);
 

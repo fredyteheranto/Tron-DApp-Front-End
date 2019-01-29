@@ -27,7 +27,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="pdwinput-div" fxLayout="column" fxLayout.gt-md="row">
+                <div fxLayout="column" fxLayout.gt-md="row">
                     <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
                         <p>PASSWORD</p>
                         <input class="abtxt" type="password"  name="password" formControlName="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }"/>
@@ -45,12 +45,18 @@
                             <div *ngIf="f.confirmpassword.errors['compare']">Password and confirmation password don't match</div>
                         </div>
                     </div>
+                </div>
+                <div class="pdwinput-div" fxLayout="column" fxLayout.gt-md="row">
                     <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
                         <p>SIGNUP AS</p>
-                        <select required class="abtxt" name="one" formControlName="role">
+                        <select required class="abtxt role" name="one" formControlName="role" [ngClass]="{ 'is-invalid': submitted && f.role.errors }">
+                            <option value="" selected="selected">Select Role</option>
                             <option value="Patient" selected="selected">Patient</option>
-                            <option value="Provider" >Provider</option>
+                            <option value="Provider">Provider</option>
                         </select>
+                        <div *ngIf="submitted && f.role.errors" class="invalid-feedback">
+                            <div *ngIf="f.role.errors.required">Please specify your role</div>
+                        </div>
                     </div>
                 </div>
                 <div class="chk-div" fxLayout="column" fxLayout.gt-md="row">

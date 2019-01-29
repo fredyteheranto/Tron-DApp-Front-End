@@ -124,16 +124,22 @@ export class MyaccountComponent implements OnInit {
     }
 
     //Datatable entries for provider
-    displayedColumns: string[] = ['type', 'name', 'email', 'user_id'];
-    dataSource: MatTableDataSource<UserData>;
+    /* displayedColumns: string[] = ['type', 'name', 'email', 'user_id'];
+    dataSource: MatTableDataSource<UserData>; */
     providerDataLength: number;
     patientName: string;
-    providerData: any;
-    allergiesCheck: boolean = false;
-    medicationsCheck: boolean = false;
-    proceduresCheck: boolean = false;
+    //providerData: any;
+    
+    filterChk : Object = {
+        alCheck : false,
+        medCheck : false,
+        proCheck : false
+    }
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
+    p: number = 1;
+    providerSharedData: any;
+    backupProviderSharedData: any;
 	/**
      * Constructor
      *
@@ -183,7 +189,7 @@ export class MyaccountComponent implements OnInit {
     view: any[] = [700, 400];
 
     ngOnInit() {
-        setTimeout(() => this.dataSource.paginator = this.paginator);
+        //setTimeout(() => this.providerSharedData.paginator = this.paginator);
 
         //setting variables for signin signout for larger and smaller screens
         this.globalService.state = this.globalService.state;
@@ -281,12 +287,21 @@ export class MyaccountComponent implements OnInit {
             this.documentService.getSharedDataForProvider(this.user_id, this.appToken)
             .subscribe(res => {
                 if (res.code === 200) {
-                    this.providerData = res.data;
+                    this.providerSharedData = res.data;
+                    this.providerSharedData.forEach((item, index) => {
+                        item['index_'+index] = false;
+                    });
+
+                    this.backupProviderSharedData = this.providerSharedData;
+                    this.providerSharedData.paginator = this.paginator;
+                    console.log(this.providerSharedData);
+                    /*this.providerData = res.data;
                     this.providerData.forEach((item, index) => {
                         item['index_'+index] = false;
                     });
                     this.providerDataLength = this.providerData.length;
                     this.dataSource = new MatTableDataSource(this.providerData);
+                    console.log(this.dataSource); */
                 }
                 else {
                     console.log(res.message);
@@ -418,71 +433,40 @@ export class MyaccountComponent implements OnInit {
         }, 1000);
         return this.copyService.copyText(this.share_link);
     }
-    
-    checkBoxaFilter(e){
-        this.medicationsCheck = false;
-        this.proceduresCheck = false;
-        if(!e) {
-            this.dataSource = new MatTableDataSource(this.providerData);
+
+    checkBoxFilter(model){
+
+        let filterValueMap = {alCheck:"allergies",medCheck:"medications",proCheck:"procedures"}
+        this.providerSharedData = this.backupProviderSharedData;
+        for (let key in this.filterChk) {
+            if (key == model) {
+                this.filterChk[key] ? this.applyFilter(filterValueMap[key]) : this.providerSharedData = this.backupProviderSharedData;//this.dataSource = new MatTableDataSource(this.providerData);
+            }
+            if(key != model) {
+                this.filterChk[key] = false;
+            }
         }
-    }
-    checkBoxmFilter(e){
-        this.allergiesCheck = false;
-        this.proceduresCheck = false;
-        if(!e) {
-            this.dataSource = new MatTableDataSource(this.providerData);
-        }
-    }
-    checkBoxpFilter(e){
-        this.allergiesCheck = false;
-        this.medicationsCheck = false;
-        if(!e) {
-            this.dataSource = new MatTableDataSource(this.providerData);
-        }
-    }
-    checkBoxFilter(e,model){
-        /* switch(model) { 
-            case 'allergiesCheck': { 
-               this.medicationsCheck = false;
-               this.proceduresCheck = false; 
-               if(this.allergiesCheck) {
-                   this.applyFilter(model);
-               }
-               break; 
-            } 
-            case 'medicationsCheck': { 
-                this.allergiesCheck = false;
-                this.proceduresCheck = false; 
-                if(this.medicationsCheck) {
-                    this.applyFilter(model);
-                }
-               break; 
-            } 
-            case 'proceduresCheck': { 
-                this.allergiesCheck = false;
-                this.medicationsCheck = false; 
-                if(this.proceduresCheck) {
-                    this.applyFilter(model);
-                }
-               break; 
-            } 
-            default: { 
-               //statements; 
-               break; 
-            } 
-         } */
     }
 
     applyFilter(filterValue: string) {
-        this.dataSource.filter = filterValue.trim().toLowerCase();
-    
+        var filteredResult = this.providerSharedData.filter(function(itm){
+            return (itm.name == filterValue.trim().toLowerCase() || itm.email == filterValue.trim().toLowerCase() || itm.type == filterValue);
+          });
+          if(filteredResult.length>0) {
+            this.providerSharedData = filteredResult;
+          }
+          else {
+            this.providerSharedData = this.backupProviderSharedData;
+          }
+        
+        /* this.dataSource.filter = filterValue.trim().toLowerCase();
+        
         if (this.dataSource.paginator) {
           this.dataSource.paginator.firstPage();
-        }
+        } */
     }
     getPDFByProvider(type,id,name,i) {
-
-        this.providerData[i]['index_'+i] = true;
+        this.providerSharedData[i]['index_'+i] = true;
         this.docModel.userId = this.user_id;
         this.docModel.token = this.appToken;
         this.patientName = name;
@@ -492,26 +476,25 @@ export class MyaccountComponent implements OnInit {
             medications: 'getMedicationList',
             procedures: 'getProcedureHistory'
         }
-        
         this.documentService.getPDFByProvider(this.docModel,id,type)
         .subscribe(res => {
             if (res.code === 200) {
-                if (res.data) {
-                    this.providerData[i]['index_'+i] = false;
+                if (!res.data) {
+                    this.providerSharedData[i]['index_'+i] = false;
                     this.snackBar.open('Record Not Found.');
                 }
                 else {
                     this[functionMap[type]](res.data);
-                    this.providerData[i]['index_'+i] = false;
+                    this.providerSharedData[i]['index_'+i] = false;
                     this.snackBar.open(res.message);
                 }
             }
             else {
-                this.providerData[i]['index_'+i] = false;
+                this.providerSharedData[i]['index_'+i] = false;
                 this.snackBar.open(res.message);
             }
         }, error => {
-            this.providerData[i]['index_'+i] = false;
+            this.providerSharedData[i]['index_'+i] = false;
             this.snackBar.open(error.error.message);
             if (error.error.code == 401) {
                 localStorage.clear();

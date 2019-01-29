@@ -49,9 +49,10 @@
             </form>
             <div fxLayout="column" fxLayout.gt-md="row"  fxLayoutAlign="center center">
                 <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100" fxLayoutAlign="center center">
-                    <button [disabled]="noKnownMedications" (click)="addMore()" mat-raised-button class="btn-mcolor-green btn-addmore">ADD MORE</button>
+                    <button mat-raised-button [disabled]="noKnownMedications" (click)="addMore()" class="btn-mcolor-green btn-addmore">ADD MORE</button>
                 </div>
             </div>
+            <span id="addmorebtn" style="display:none"></span>
             <div fxLayout="column" fxLayout.gt-md="row">
                 <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
                     <mat-checkbox class="chk-know" [(ngModel)]="noKnownMedications" (change)="clearFields()">NO KNOWN MEDICATIONS</mat-checkbox>

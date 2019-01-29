@@ -87,94 +87,85 @@
                     <h1>PATIENT HEALTH RECORD</h1>
                 </div>
             </div>
-            <div *ngIf="user_role == 'Provider'" class="table-title" fxLayout.gt-md="row">
+            <div *ngIf="user_role == 'Provider'" class="table-title block-sm" fxLayout.gt-md="row">
                 
-                <input class="abtxt" type="text" (keyup)="applyFilter($event.target.value)" placeholder="Filter"/>
+                <input class="abtxt" type="text" [attr.disabled]="disabled ? '' : null" (keyup)="applyFilter($event.target.value)" placeholder="by patient name,email"/>
                 
-                <div fxLayout.gt-md="column">
+                <div fxLayout.gt-sm="column">
                     <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
-                        <mat-checkbox class="chk-know"  name="allergies" [(ngModel)]="allergiesCheck" (ngModelChange)="checkBoxaFilter($event)"> Allergies </mat-checkbox>
+                        <mat-checkbox class="chk-know"  name="allergies" [(ngModel)]="filterChk.alCheck" (ngModelChange)="checkBoxFilter('alCheck')"> Allergies </mat-checkbox>
                     </div>
                     <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
-                        <mat-checkbox class="chk-know"  name="medications" [(ngModel)]="medicationsCheck" (ngModelChange)="checkBoxmFilter($event)"> Medications </mat-checkbox>
+                        <mat-checkbox class="chk-know"  name="medications" [(ngModel)]="filterChk.medCheck" (ngModelChange)="checkBoxFilter('medCheck')"> Medications </mat-checkbox> 
                     </div>
                     <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
-                        <mat-checkbox class="chk-know"  name="procedures" [(ngModel)]="proceduresCheck" (ngModelChange)="checkBoxpFilter($event)"> Procedures </mat-checkbox>
+                        <mat-checkbox class="chk-know"  name="procedures" [(ngModel)]="filterChk.proCheck" (ngModelChange)="checkBoxFilter('proCheck')"> Procedures </mat-checkbox>
                     </div>
                 </div>
             </div>
             <div *ngIf="user_role == 'Provider'" class="table-body table1-large-820" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="center center">
                 <div class="content-items flex-pos" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100" fxLayoutAlign="center center">
-                    <table class="table-type1" mat-table [dataSource]="dataSource" width="100%">
-                        <!-- Record Type Column -->
-                        <ng-container matColumnDef="type">
-                            <th mat-header-cell *matHeaderCellDef> RECORD TYPE </th>
-                            <td mat-cell *matCellDef="let row"> {{row.type}} </td>
-                        </ng-container>
-                    
-                        <!-- PATIENT Column -->
-                        <ng-container matColumnDef="name">
-                            <th mat-header-cell *matHeaderCellDef> PATIENT </th>
-                            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
-                        </ng-container>
-                    
-                        <!-- PATIENT EMAIL Column -->
-                        <ng-container matColumnDef="email">
-                            <th mat-header-cell *matHeaderCellDef> PATIENT EMAIL </th>
-                            <td mat-cell *matCellDef="let row"> {{row.email}} </td>
-                        </ng-container>
-                    
-                        <!-- DOWNLOAD Column -->
-                        <ng-container matColumnDef="user_id">
-                            <th mat-header-cell *matHeaderCellDef> DOWNLOAD </th>
-                            <td mat-cell *matCellDef="let row; let i = index;">  
-                                <button mat-raised-button class="btn-mcolor-cray" *ngIf="!providerData[i]['index_'+i]" (click)="getPDFByProvider(row.type,row.user_id,row.name,i)">OPEN</button>
-                                <button mat-raised-button class="btn-mcolor-cray"  *ngIf="providerData[i]['index_'+i]">
-                                    <mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner>
-                                </button>
-                            </td>
-                        </ng-container>
-                    
-                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                        <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index;">
-                        </tr>
+                    <table class="table-type1 table-pro"  width="100%">
+                        <thead>
+                            <tr>
+                                <th class="left" width="25%">RECORD TYPE</th>
+                                <th class="left" width="25%">PATIENT</th>
+                                <th class="center" width="25%">PATIENT EMAIL</th>
+                                <th class="center" width="25%">DOWNLOAD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngIf="providerSharedData?.length == 0">
+                                <td class="no-record-text" colspan="4">No Existing Record Found</td>  
+                            </tr>
+                            <tr *ngFor="let row of providerSharedData | paginate: { itemsPerPage: 5, currentPage: p };let i=index;">
+                                <td class="description left">{{row.type}}</td>
+                                <td class="data-source left">{{row.name}}</td>
+                                <td class="description center">{{row.email}}</td>
+                                <td class="download center">
+                                    <button mat-raised-button class="btn-mcolor-cray" *ngIf="!providerSharedData[i]['index_'+i]" (click)="getPDFByProvider(row.type,row.user_id,row.name,i)">OPEN</button>
+                                    <button mat-raised-button class="btn-mcolor-cray"  *ngIf="providerSharedData[i]['index_'+i]">
+                                        <mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <pagination-controls style="float:right" (pageChange)="p = $event"></pagination-controls>
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
-                    <mat-paginator [length]="providerDataLength" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                 </div>
             </div>
             <div *ngIf="user_role == 'Provider'" class="table-body table1-less-820" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="center center">
                     <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100" fxLayoutAlign="center center">
-                        <table class="table-type1" mat-table [dataSource]="dataSource" width="100%">
-                        <!-- Record Type Column -->
-                        <ng-container matColumnDef="type">
-                                <th mat-header-cell *matHeaderCellDef> RECORD TYPE </th>
-                                <td mat-cell *matCellDef="let row"> {{row.type}} </td>
-                            </ng-container>
-                        
-                            <!-- PATIENT Column -->
-                            <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef> PATIENT </th>
-                                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
-                            </ng-container>
-                        
-                            <!-- PATIENT EMAIL Column -->
-                            <ng-container matColumnDef="email">
-                                <th mat-header-cell *matHeaderCellDef> PATIENT EMAIL </th>
-                                <td mat-cell *matCellDef="let row"> {{row.email}} </td>
-                            </ng-container>
-                        
-                            <!-- DOWNLOAD Column -->
-                            <ng-container matColumnDef="user_id">
-                                <th mat-header-cell *matHeaderCellDef> DOWNLOAD </th>
-                                <td mat-cell *matCellDef="let row"> {{row.user_id}} </td>
-                            </ng-container>
-                        
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;">
-                            </tr>
+                        <table class="table-type1" width="100%">
+                            <thead>
+                                <tr>
+                                    <th class="left" width="100%">PATIENT RECORDS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="providerSharedData?.length == 0">
+                                    <td>
+                                        <p class="date">No Record Found</p>
+                                    </td>
+                                </tr>
+                                <tr *ngFor="let row of providerSharedData | paginate: { itemsPerPage: 3, currentPage: p };let i=index;">
+                                    <td>
+                                        <p class="description">{{row.type}}</p>
+                                        <p class="description">{{row.name}}</p>
+                                        <p class="date">{{row.email}}
+                                            <a href="javascript:void(0)" class="download-href" *ngIf="!providerSharedData[i]['index_'+i]" (click)="getPDFByProvider(row.type,row.user_id,row.name,i)">OPEN</a>
+                                            <a href="javascript:void(0)" class="download-href" *ngIf="providerSharedData[i]['index_'+i]" ><mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner></a>
+                                        </p>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
-                        <mat-paginator [length]="100" [pageSize]="5" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
                     </div>
+                    <pagination-controls (pageChange)="p = $event"></pagination-controls>
                 </div>
             <!-- user is provider. -->
             <div *ngIf="user_role == 'Patient'" class="table-title" fxLayout.gt-md="row">

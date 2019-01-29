@@ -65,6 +65,7 @@
     "ngrx-store-freeze": "0.2.4",
     "ngx-color-picker": "6.5.0",
     "ngx-cookie-service": "1.0.10",
+    "ngx-pagination": "^3.2.1",
     "perfect-scrollbar": "1.4.0",
     "pg": "^7.4.3",
     "pg-hstore": "^2.3.2",

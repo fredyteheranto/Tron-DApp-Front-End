@@ -85,7 +85,7 @@ export class SignupComponent implements OnInit {
         password: ['', [Validators.required, Validators.pattern('((?=.*\\d)(?=.*[A-Z])(?=.*\\W).{8,30})')]],
         confirmpassword: ['',[Validators.required, Validators.pattern('((?=.*\\d)(?=.*[A-Z])(?=.*\\W).{8,30})'), compareValidator('password')]],
         isAgree: [false,[Validators.requiredTrue]],
-        role:['Patient',Validators.required]
+        role:['',Validators.required]
       });
     }
 

@@ -19,8 +19,9 @@ import { DetailsComponent } from './details/details.component';
 import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { ShareComponent } from './share/share.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
-import { MatButtonModule, MatIconModule, MatCheckboxModule,MatTooltipModule, MatGridListModule, MatDialogModule, MatTableModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatCheckboxModule, MatRadioModule, MatTooltipModule, MatGridListModule, MatDialogModule, MatTableModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule } from '@angular/material';
 
 const routes = [
     {
@@ -49,6 +50,7 @@ const routes = [
         MatButtonModule,
         MatIconModule,
         MatCheckboxModule,
+        MatRadioModule,
         MatGridListModule,
         MatTooltipModule,
         NgxChartsModule,
@@ -64,7 +66,8 @@ const routes = [
 
         ShareModule,
 
-        NgxDatatableModule
+        NgxDatatableModule,
+        NgxPaginationModule
     ],
     exports: [
         MyaccountComponent

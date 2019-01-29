@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { locale as english } from './i18n/en';
 import { locale as turkish } from './i18n/tr';
 import { Document } from '../../model/document.model';
@@ -41,6 +41,7 @@ export class MedicationlistComponent implements OnInit {
     private docModel: Document,
     private globalService: Global,
     public snackBar: MatSnackBar,
+    private renderer: Renderer2,
     private documentService: DocumentService,
     private _fuseTranslationLoaderService: FuseTranslationLoaderService
   ) {
@@ -125,6 +126,8 @@ export class MedicationlistComponent implements OnInit {
       this.medicationData.enable();
       this.InitializeForm();
     }
+    const element = this.renderer.selectRootElement('#addmorebtn');
+    setTimeout(() => element.focus(), 0);
   }
 
   //Document Saving

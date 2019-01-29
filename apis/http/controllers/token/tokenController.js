@@ -261,6 +261,7 @@ async function getReferralsByUser(req, res) {
 }
 
 var rp = require('request-promise');
+var _ = require('lodash');
 var options = {
     uri: '',
     headers: {
@@ -271,8 +272,7 @@ var options = {
 const apiUrlForVotersList = `${process.env.TRON_SCAN_URL}api/vote`;
 //This route is for server testing purpose only
 async function getEnv(req, res) {
-    return
-    try {
+    /*try {
         //DB Queries
         [err, rewardObj] = await utils.to(db.models.reward_conf.findAll({
             where: {
@@ -293,15 +293,32 @@ async function getEnv(req, res) {
         for (let i = 0; i < response.data.length; i++) {
             let cycleNo = getCycleNoByTime(response.data[i].timestamp);
             let matchedData = rewardData.filter(x => x.voter_address == response.data[i].voterAddress);
-            if (matchedData.length == 1) {
-                if (!(matchedData[0].votes == response.data[i].votes)) {
-                    [err, update] = await utils.to(db.models.voter_rewards.create({
-                        candidate_address: response.data[i].candidateAddress,
-                        voter_address: response.data[i].voterAddress,
-                        votes: response.data[i].votes - matchedData[0].votes,
-                        time_stamp: response.data[i].timestamp,
-                        cycle_no: cycleNo
-                    }));
+            if (matchedData.length > 0) {
+                //matchedData = _.orderBy(matchedData, ['votes'], ['desc']);
+                let sum = _.sumBy(matchedData, function (o) { return o.votes; });
+                if (!(sum == response.data[i].votes)) {
+                    if (sum < response.data[i].votes) {
+                        [err, update] = await utils.to(db.models.voter_rewards.create({
+                            candidate_address: response.data[i].candidateAddress,
+                            voter_address: response.data[i].voterAddress,
+                            votes: response.data[i].votes - sum,
+                            time_stamp: response.data[i].timestamp,
+                            cycle_no: cycleNo
+                        }));
+                    } else {
+                        console.log('vote minus');
+                        [err, deleteData] = await utils.to(db.models.voter_rewards.destroy({
+                            where: { voter_address: response.data[i].voterAddress }
+                        }));
+                        [err, newData] = await utils.to(db.models.voter_rewards.create({
+                            candidate_address: response.data[i].candidateAddress,
+                            voter_address: response.data[i].voterAddress,
+                            votes: response.data[i].votes,
+                            time_stamp: response.data[i].timestamp,
+                            cycle_no: cycleNo
+                        }));
+                    }
+
                 }
             } else {
                 [err, added] = await utils.to(db.models.voter_rewards.create({
@@ -313,28 +330,33 @@ async function getEnv(req, res) {
                 }));
             }
         };
-        //Reward distribution.
+        //Reward distribution. order by Distinct..
+        // [err, rewardData] = await utils.to(db.query('select t.voter_address, t.createdAt, t.votes, t.cycle_no from voter_rewards t inner join (select voter_address, max(createdAt) as MaxDate from voter_rewards group by voter_address) tm on t.voter_address = tm.voter_address and t.createdAt = tm.MaxDate order by tm.MaxDate desc',
+        //     {
+        //         type: db.QueryTypes.SELECT,
+        //     }));
         [err, rewardData] = await utils.to(db.models.voter_rewards.findAll({}));
-        var totalNumberOfRewardTokensdispersed = 0;
+        [err, dbcycle] = await utils.to(db.query('select cycle_no, sum(votes) as totalCycleVotes from voter_rewards group by cycle_no', {
+            type: db.QueryTypes.SELECT,
+        }));
+
+        //Doing this becuase there is no record of cycle 2 in db. so to currectly arrange the indexs for the time being doing this.
+        let cycleNoArray = rearrangeCycleArray(dbcycle);
         let currentCycle = getCycleNoByTime(new Date());
         for (let i = 0; i < rewardData.length; i++) {
             if (currentCycle == rewardData[i].cycle_no) {
-                let votePercentageOfAUser = ((rewardData[i].votes / totalNumberOfVotes) * 100);
-                let numberOfRewardAmount = Math.ceil((votePercentageOfAUser * (rewardObj[0].max_amount) / 4) / 100);
-                totalNumberOfRewardTokensdispersed = numberOfRewardAmount;
-                if (totalNumberOfRewardTokensdispersed < (rewardObj[0].max_amount)/4) {
-                    await sendEHRTokensToAirVoterUsers(rewardData[i].voter_address, numberOfRewardAmount);
-                } else {
-                    console.log(`${new Date()} Quota Complete`);
-                    break;
-                }
+                totalNumberOfVotes = cycleNoArray[currentCycle];
+                let votePercentageOfAUser = ((rewardData[i].votes / (totalNumberOfVotes)) * 100);
+                let numberOfRewardAmount = Math.ceil((votePercentageOfAUser * (rewardObj[0].max_amount)/4) / 100);
+                //await sendEHRTokensToAirVoterUsers(rewardData[i].voter_address, numberOfRewardAmount);
+                console.log(i + 1, numberOfRewardAmount);
             }
         }
     }
     catch (exp) {
         console.log(exp);
     }
-
+*/
     //let transection = await tronUtils.createSmartContract();
     //return response.sendResponse(res, resCode.SUCCESS, transection);
 }
@@ -346,6 +368,22 @@ function getCycleNoByTime(datetime) {
     if (hours > 18 && hours < 24) return 4;
 
 
+}
+function rearrangeCycleArray(dbcycle) {
+    dt = []
+    for (let i = 0; i <= 4; i++) {
+        if (dbcycle[i]) {
+            if (dbcycle[i].cycle_no == 1)
+                dt[1] = dbcycle[i].totalCycleVotes;
+            if (dbcycle[i].cycle_no == 2)
+                dt[2] = dbcycle[i].totalCycleVotes;
+            if (dbcycle[i].cycle_no == 3)
+                dt[3] = dbcycle[i].totalCycleVotes;
+            if (dbcycle[i].cycle_no == 4)
+                dt[4] = dbcycle[i].totalCycleVotes;
+        }
+    }
+    return dt;
 }
 module.exports = {
     sendToken,

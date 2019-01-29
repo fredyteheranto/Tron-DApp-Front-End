@@ -32,6 +32,7 @@ async function getTRC10TokenBalance(privateKey, address) {
         let account = await tronWeb.trx.getAccount(address);
         if(account == ""){
             console.log('account info blank');
+            getTRC10TokenBalance(privateKey, address);
         }
         if (account.assetV2) {
             for (let i = 0; i < account.assetV2.length; i++) {

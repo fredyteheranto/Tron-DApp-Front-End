@@ -30,7 +30,9 @@ async function getTRC10TokenBalance(privateKey, address) {
     try {
         let tronWeb = new TronWeb(fullNode, solidityNode, eventServer, privateKey);
         let account = await tronWeb.trx.getAccount(address);
-
+        if(account == ""){
+            console.log('account info blank');
+        }
         if (account.assetV2) {
             for (let i = 0; i < account.assetV2.length; i++) {
                 if (account.assetV2[i].key == process.env.TRON_TOKEN_ID) {

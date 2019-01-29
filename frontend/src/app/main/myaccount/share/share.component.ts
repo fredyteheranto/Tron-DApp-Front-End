@@ -101,6 +101,9 @@ export class ShareComponent implements OnInit {
         if (res.code === 200) {
           this.loader = false;
           this.snackBar.open("Providers saved successfully!");
+          setTimeout(() => {
+            this.dialogRef.close();
+          }, 2000);
         }
         else {
           this.loader = false;

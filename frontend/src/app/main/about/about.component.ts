@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { locale as english } from './i18n/en';
 import { locale as turkish } from './i18n/tr';
 import { Global } from '../../service/global.service';
@@ -58,7 +58,6 @@ export class AboutComponent implements OnInit {
         private docModel: Document,
         private globalService: Global,
         public snackBar: MatSnackBar,
-        private renderer: Renderer2,
         private documentService: DocumentService,
         private _fuseTranslationLoaderService: FuseTranslationLoaderService
     ) {
@@ -87,7 +86,6 @@ export class AboutComponent implements OnInit {
 
         this.InitializeForm();
     }
-
     //Track small screen, to display label above each input at small screen
     isVisible(index) {
         if (index < 1 && !this.isSmallScreen) {
@@ -141,8 +139,6 @@ export class AboutComponent implements OnInit {
         this.allergyData.enable();
         this.InitializeForm();
         }
-        const element = this.renderer.selectRootElement('#addmorebtn');
-        setTimeout(() => element.focus(), 0);
     }
 
     //Document Saving

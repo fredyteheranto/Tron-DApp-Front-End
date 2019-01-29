@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Renderer2 } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { locale as english } from './i18n/en';
 import { locale as turkish } from './i18n/tr';
 import { Document } from '../../model/document.model';
@@ -39,7 +39,6 @@ export class ProcedureHistoryComponent implements OnInit {
     private titleService: Title,
     private globalService: Global,
     public snackBar: MatSnackBar,
-    private renderer: Renderer2,
     private documentService: DocumentService,
     private _fuseTranslationLoaderService: FuseTranslationLoaderService
   ) {
@@ -109,8 +108,6 @@ export class ProcedureHistoryComponent implements OnInit {
       this.procedureData.enable();
       this.InitializeForm();
     }
-    const element = this.renderer.selectRootElement('#addmorebtn');
-    setTimeout(() => element.focus(), 0);
   }
 
   //convert date to date object and then to local date

@@ -20,7 +20,8 @@ import { ShareComponent } from './share/share.component';
 import { FuseCopierService } from '@fuse/services/copier.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
-import adBlocker from 'just-detect-adblock'
+import adBlocker from 'just-detect-adblock';
+import { FilterPipe } from '@fuse/pipes/filter.pipe';
 
 export interface UserData {
     type: string,
@@ -123,13 +124,7 @@ export class MyaccountComponent implements OnInit {
         'create procedure history':true,
     }
 
-    //Datatable entries for provider
-    /* displayedColumns: string[] = ['type', 'name', 'email', 'user_id'];
-    dataSource: MatTableDataSource<UserData>; */
-    providerDataLength: number;
     patientName: string;
-    //providerData: any;
-    
     filterChk : Object = {
         alCheck : false,
         medCheck : false,
@@ -138,6 +133,7 @@ export class MyaccountComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
 
     p: number = 1;
+    searchText: string = "";
     providerSharedData: any;
     backupProviderSharedData: any;
 	/**
@@ -291,17 +287,6 @@ export class MyaccountComponent implements OnInit {
                     this.providerSharedData.forEach((item, index) => {
                         item['index_'+index] = false;
                     });
-
-                    this.backupProviderSharedData = this.providerSharedData;
-                    this.providerSharedData.paginator = this.paginator;
-                    console.log(this.providerSharedData);
-                    /*this.providerData = res.data;
-                    this.providerData.forEach((item, index) => {
-                        item['index_'+index] = false;
-                    });
-                    this.providerDataLength = this.providerData.length;
-                    this.dataSource = new MatTableDataSource(this.providerData);
-                    console.log(this.dataSource); */
                 }
                 else {
                     console.log(res.message);
@@ -437,34 +422,16 @@ export class MyaccountComponent implements OnInit {
     checkBoxFilter(model){
 
         let filterValueMap = {alCheck:"allergies",medCheck:"medications",proCheck:"procedures"}
-        this.providerSharedData = this.backupProviderSharedData;
         for (let key in this.filterChk) {
             if (key == model) {
-                this.filterChk[key] ? this.applyFilter(filterValueMap[key]) : this.providerSharedData = this.backupProviderSharedData;//this.dataSource = new MatTableDataSource(this.providerData);
+                this.filterChk[key] ? this.searchText = filterValueMap[key] : this.searchText = "";;
             }
             if(key != model) {
                 this.filterChk[key] = false;
             }
         }
     }
-
-    applyFilter(filterValue: string) {
-        var filteredResult = this.providerSharedData.filter(function(itm){
-            return (itm.name == filterValue.trim().toLowerCase() || itm.email == filterValue.trim().toLowerCase() || itm.type == filterValue);
-          });
-          if(filteredResult.length>0) {
-            this.providerSharedData = filteredResult;
-          }
-          else {
-            this.providerSharedData = this.backupProviderSharedData;
-          }
-        
-        /* this.dataSource.filter = filterValue.trim().toLowerCase();
-        
-        if (this.dataSource.paginator) {
-          this.dataSource.paginator.firstPage();
-        } */
-    }
+    
     getPDFByProvider(type,id,name,i) {
         this.providerSharedData[i]['index_'+i] = true;
         this.docModel.userId = this.user_id;

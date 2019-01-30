@@ -59,8 +59,8 @@
                 </div>
             </div>
             <div class="wallet-less-1280 less-user-wallet" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="center center">
-                <div class="" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100" fxLayoutAlign="center center">
-                    <h1>{{username | uppercase}}'S WALLET</h1>
+                <div fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100" fxLayoutAlign="center center">
+                    <h1 class="txt-center">{{username | uppercase}}'S WALLET</h1>
                 </div>
             </div>
             <div class="wallet-less-1280 less-user-chart" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="center center">
@@ -156,7 +156,7 @@
                                 <tr *ngFor="let row of providerSharedData  | filter : searchText | paginate: { itemsPerPage: 3, currentPage: p };let i=index;">
                                     <td>
                                         <p class="description">{{row.type | titlecase }}</p>
-                                        <p class="description">{{row.name | titlecase }}</p>
+                                        <p class="description black-text">{{row.name | titlecase }}</p>
                                         <p class="date">
                                             <a href="mailto:{{row.email}}" class="download-href" style="margin-left: 0px;">{{row.email}}</a>
                                         </p>

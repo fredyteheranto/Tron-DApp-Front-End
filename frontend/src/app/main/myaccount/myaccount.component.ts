@@ -21,14 +21,6 @@ import { FuseCopierService } from '@fuse/services/copier.service';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import adBlocker from 'just-detect-adblock';
-import { FilterPipe } from '@fuse/pipes/filter.pipe';
-
-export interface UserData {
-    type: string,
-    name: string,
-    email: string,
-    user_id: number
-}
 
 @Component({
     selector: 'myaccount',
@@ -134,6 +126,10 @@ export class MyaccountComponent implements OnInit {
 
     p: number = 1;
     searchText: string = "";
+    filterText: string = "";
+    SearchSpin: boolean = false;
+    searchBtnSpin: boolean = false;
+    totalRecordCount: number;
     providerSharedData: any;
     backupProviderSharedData: any;
 	/**
@@ -280,20 +276,8 @@ export class MyaccountComponent implements OnInit {
             });
     
         if(this.user_role == "Provider") {
-            this.documentService.getSharedDataForProvider(this.user_id, this.appToken)
-            .subscribe(res => {
-                if (res.code === 200) {
-                    this.providerSharedData = res.data;
-                    this.providerSharedData.forEach((item, index) => {
-                        item['index_'+index] = false;
-                    });
-                }
-                else {
-                    console.log(res.message);
-                }
-            }, error => {
-                console.log(error.error.message);
-            });
+            this.searchTable(1);
+            
         } 
 
     }
@@ -419,12 +403,51 @@ export class MyaccountComponent implements OnInit {
         return this.copyService.copyText(this.share_link);
     }
 
+    searchTableQuery(pageNumber) {
+        this.searchBtnSpin = true;
+        this.searchTable(pageNumber);
+    }
+    
+    searchTable(page: number) {
+        let data = {
+            providerId: this.user_id,
+            token: this.appToken,
+            searchValue: this.searchText,
+            filter: this.filterText,
+            pageNo: page
+        }
+        this.SearchSpin = true;
+        this.documentService.getSharedDataForProvider(data)
+            .subscribe(res => {
+                if (res.code === 200) {
+                    this.p = page;
+                    this.totalRecordCount = res.data['count'];
+                    this.providerSharedData = res.data['rows'];
+                    
+                    this.providerSharedData.forEach((item, index) => {
+                        item['index_'+index] = false;
+                    });
+                    this.SearchSpin = false;
+                    this.searchBtnSpin = false;
+                }
+                else {
+                    console.log(res.message);
+                    this.SearchSpin = false;
+                    this.searchBtnSpin = false;
+                }
+            }, error => {
+                console.log(error.error.message);
+                this.SearchSpin = false;
+                this.searchBtnSpin = false;
+            });
+    }
+
     checkBoxFilter(model){
 
         let filterValueMap = {alCheck:"allergies",medCheck:"medications",proCheck:"procedures"}
         for (let key in this.filterChk) {
             if (key == model) {
-                this.filterChk[key] ? this.searchText = filterValueMap[key] : this.searchText = "";;
+                this.filterChk[key] ? this.filterText = filterValueMap[key] : this.filterText = "";;
             }
             if(key != model) {
                 this.filterChk[key] = false;

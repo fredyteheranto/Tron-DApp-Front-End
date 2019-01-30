@@ -96,10 +96,10 @@ export class DocumentService {
     return this.httpClient.post<responseData>(environment.serviceUrl + "user/shareListWithProviders", data, { headers: headers });
   }
 
-  getSharedDataForProvider(userId,token) {
+  getSharedDataForProvider(d) {
     let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
-    headers= headers.set('authorization', token);
-    let data = { providerId: userId };
+    headers= headers.set('authorization', d.token);
+    let data = { providerId: d.providerId, filter: d.filter, searchValue: d.searchValue, pageNumber: d.pageNo};
 
     return this.httpClient.post<responseData>(environment.serviceUrl + "user/getProviderSharedData", data, { headers: headers });
   }

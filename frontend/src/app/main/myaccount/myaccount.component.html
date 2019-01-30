@@ -156,7 +156,7 @@
                                 <tr *ngFor="let row of providerSharedData  | filter : searchText | paginate: { itemsPerPage: 3, currentPage: p };let i=index;">
                                     <td>
                                         <p class="description">{{row.type | titlecase }}</p>
-                                        <p class="description">{{row.name | titlecase }}</p>
+                                        <p class="description black-text">{{row.name | titlecase }}</p>
                                         <p class="date">
                                             <a href="mailto:{{row.email}}" class="download-href" style="margin-left: 0px;">{{row.email}}</a>
                                         </p>

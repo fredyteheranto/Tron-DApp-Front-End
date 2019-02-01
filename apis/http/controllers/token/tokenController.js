@@ -354,9 +354,9 @@ async function getEnv(req, res) {
 function getCycleNoByTime(datetime) {
     var hours = new Date(datetime).getUTCHours();
     if (hours >= 0 && hours < 6) return 1;
-    if (hours > 6 && hours < 12) return 2;
-    if (hours > 12 && hours < 18) return 3;
-    if (hours > 18 && hours < 24) return 4;
+    if (hours >= 6 && hours < 12) return 2;
+    if (hours >= 12 && hours < 18) return 3;
+    if (hours >= 18 && hours < 24) return 4;
 }
 function rearrangeCycleArray(dbcycle) {
     dt = []

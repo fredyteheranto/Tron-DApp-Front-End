@@ -65,6 +65,15 @@ export class UserService {
 
     return this.httpClient.post<responseData>(environment.serviceUrl + "user/resendLinkEmail", data, { headers: headers });
   }
+
+  updateAccountEmail(d) {
+    let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
+    headers= headers.set('authorization', d.token);
+    let data = {userId: d.userId, newEmail: d.email, password: d.password};
+
+    return this.httpClient.post<responseData>(environment.serviceUrl + "user/changeEmail", data, { headers: headers });
+  }
+
   getUserReferrals(userId, coupon, pNum, token) {
     let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
     headers= headers.set('authorization', token);
@@ -72,6 +81,7 @@ export class UserService {
 
     return this.httpClient.post<responseData>(environment.serviceUrl + "user/getReferralsByUser", data, { headers: headers });
   }
+  
   contactUs(contact : Contact, captchaKey) {
     let headers = new HttpHeaders().set('Content-Type', 'application/json; charset=UTF-8');
 

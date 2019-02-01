@@ -25,6 +25,8 @@ var ResponseMessagesEnum = {
     MAIL_SENT: "Please check your email to continue further.",
     MAIL_NOT_SENT: "Email server is down, please try again later.",
     MAIL_SENT_CONTACT_US: "Your messsage has been sent successfully.",
+    MAIL_UPDATED: "Your email changed successfully, please login to continue.",
+    MAIL_ALREADY_EXIST: "Email already exist.",
     NO_RECORD_FOUND: "No record found.",
     PASSWORD_ARE_SAME: "Current and new passwords are same.",
     PASSWORD_ERROR: "Password length needs to between 8 to 30 characters.",

@@ -32,7 +32,7 @@ async function signUp(req, res) {
         let captcha_key = req.body.captchaKey;
         let refer_by_coupon = req.body.referby;
         let refer_destination = req.body.destination;
-        
+
         let err, user, token, account, passCode;
 
         //Checking terms and conditions
@@ -120,7 +120,7 @@ async function signIn(req, res) {
         let email = req.body.email;
         let password = req.body.password;
         let captcha_key = req.body.captchaKey;
-        
+
         let err, user, token, passCode;
 
         //Validating captcha only when environment is not dev
@@ -189,7 +189,7 @@ async function forgetPassword(req, res) {
     try {
         let email = req.body.email;
         let captcha_key = req.body.captchaKey;
-        
+
         let err, user, token, foundPasscode, passcodeCreateTime, timeDifferInMin, mailSent;
 
         let passcode = passcodeGenerator.generate({ length: 14, numbers: true });
@@ -261,7 +261,7 @@ async function confirmForgotPassword(req, res) {
         let passcode = req.auth.pass_code;
         let password = req.body.password;
         let captcha_key = req.body.captchaKey;
-        
+
         let err, data;
 
         //Validating captcha only when environment is not dev
@@ -323,7 +323,7 @@ async function verifyEmail(req, res) {
     try {
         let email = req.auth.email;
         let passcode = req.auth.pass_code;
-        
+
         let err, user;
 
         //Finding user record from db
@@ -434,7 +434,7 @@ async function resendLinkEmail(req, res) {
         let passcode = req.auth.pass_code;
         let email = req.auth.email;
         let user_id = req.auth.user_id;
-        
+
         let err, data, foundPasscode;
 
         //Checking if user already exists
@@ -522,11 +522,64 @@ async function contactUs(req, res) {
         return response.errReturned(res, error);
     }
 }
+
+async function changeEmail(req, res) {
+    try {
+        let user_id = req.body.userId;
+        let password = req.body.password;
+        let new_email = req.body.newEmail;
+
+        let err, user;
+        //Checking empty email, password and role 
+        if (!(user_id && password && new_email))
+            return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.REQUIRED_FIELDS_EMPTY);
+
+        //Reguler expression testing for email
+        if (!regex.emailRegex.test(new_email))
+            return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.INVALID_EMAIL_ADDRESS);
+
+        //Reguler expression testing for password requirements
+        if (!regex.passRegex.test(password))
+            return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.PASSWORD_COMPLEXITY);
+
+        //Finding record from db    
+        [err, user] = await utils.to(db.models.users.findOne({ where: { id: user_id } }));
+        if (user == null) return response.sendResponse(res, resCode.NOT_FOUND, resMessage.USER_NOT_FOUND);
+
+        //Same email check
+        if (new_email == user.email)
+            return response.sendResponse(res, resCode.NOT_FOUND, resMessage.MAIL_ALREADY_EXIST);
+
+        //Already exists email check
+        [err, mailCheck] = await utils.to(db.models.users.findAll({ where: { email: new_email } }));
+        if (mailCheck.length > 0) return response.sendResponse(res, resCode.NOT_FOUND, resMessage.MAIL_ALREADY_EXIST);
+
+        //Decrypting password
+        [err, passwordCheck] = await utils.to(bcrypt.compare(password, user.password));
+        if (!passwordCheck) return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.PASSWORD_INCORRECT);
+
+        //Updating email in db
+        [err, result] = await utils.to(db.models.users.update(
+            { email: new_email },
+            { where: { id: user_id } }
+        ));
+        if (err || !result) return response.sendResponse(res, resCode.INTERNAL_SERVER_ERROR, resMessage.API_ERROR)
+
+        //Returing successful response
+        return response.sendResponse(res, resCode.SUCCESS, resMessage.MAIL_UPDATED)
+
+    } catch (error) {
+        console.log(error);
+        return response.errReturned(res, error);
+    }
+}
+
 module.exports = {
     signUp,
     signIn,
     contactUs,
     verifyEmail,
+    changeEmail,
     forgetPassword,
     resendLinkEmail,
     confirmForgotPassword,

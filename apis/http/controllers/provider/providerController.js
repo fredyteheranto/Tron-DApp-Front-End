@@ -214,10 +214,18 @@ async function getProviderSharedData(req, res) {
             returnableData['count'] = dbData.length;
             let slicedData = dbData.slice(start, end)
             returnableData['rows'] = slicedData;
+
         }
-        
         //Returing successful response
         return response.sendResponse(res, resCode.SUCCESS, resMessage.SUCCESS, returnableData);
+
+        // [err, data] = await utils.to(db.query('select p.user_id, u.name, u.email, p.type from users u ' +
+        //     'inner join patient_provider_records p on u.id = user_id where p.share_with_id = :share_with_id order by u.id desc',
+        //     {
+        //         replacements: { share_with_id: provider_id.toString() },
+        //         type: db.QueryTypes.SELECT,
+        //     }));
+
     } catch (error) {
         console.log(error);
         return response.errReturned(res, error);

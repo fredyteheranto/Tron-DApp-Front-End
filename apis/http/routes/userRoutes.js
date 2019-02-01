@@ -15,6 +15,7 @@ router.post('/confirmForgotPassword', authorize.authenticateToken, userControlle
 router.post('/verifyEmail', authorize.authenticateToken, userController.verifyEmail);
 router.post('/resendLinkEmail', authorize.authenticateToken, userController.resendLinkEmail);
 router.post('/contactUs', userController.contactUs);
+router.post('/changeEmail', authorize.authenticateToken, userController.changeEmail);
 
 router.post('/sendToken', authorize.authenticateToken, tokenController.sendToken);
 router.post('/getBalance', authorize.authenticateToken, tokenController.getBalance);

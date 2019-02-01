@@ -617,10 +617,6 @@ async function changeEmail(req, res) {
         if (!regex.emailRegex.test(new_email))
             return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.INVALID_EMAIL_ADDRESS);
 
-        //Reguler expression testing for password requirements
-        if (!regex.passRegex.test(password))
-            return response.sendResponse(res, resCode.BAD_REQUEST, resMessage.PASSWORD_COMPLEXITY);
-
         //Finding record from db    
         [err, user] = await utils.to(db.models.users.findOne({ where: { id: user_id } }));
         if (user == null) return response.sendResponse(res, resCode.NOT_FOUND, resMessage.USER_NOT_FOUND);

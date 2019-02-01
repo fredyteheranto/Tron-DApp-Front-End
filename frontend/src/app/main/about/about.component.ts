@@ -130,7 +130,7 @@ export class AboutComponent implements OnInit {
     }
 
     //clear and disable if noknown checkbox true
-    clearFields() {
+    clearFields(el) {
         if(this.noKnownAllergies) {
         this.clearFormArray(this.allergyData);
         this.allergyData.disable();
@@ -139,6 +139,7 @@ export class AboutComponent implements OnInit {
         this.allergyData.enable();
         this.InitializeForm();
         }
+        el.scrollIntoView();
     }
 
     //Document Saving

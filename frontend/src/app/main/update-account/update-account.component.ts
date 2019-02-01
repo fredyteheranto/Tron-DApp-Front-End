@@ -115,6 +115,8 @@ export class UpdateAccountComponent implements OnInit {
         }, error => {
           this.loader = false;
           this.snackBar.open(error.error.message);
+          this.f.newEmail.clearValidators()
+          this.f.currentPassword.clearValidators();
           this.updateEmailForm.reset();
           if (error.error.code == 401) {
             localStorage.clear();

@@ -101,10 +101,12 @@ export class UpdateAccountComponent implements OnInit {
             this.loader = false;
             this.snackBar.open(res.message);
             localStorage.clear();
-            setTimeout(() => {
-              this.globalService.state = "SIGNUP";
-              this.router.navigate(['/login']);
-            }, 1500);
+            localStorage.setItem('verificationToken', JSON.stringify(res.token));
+              setTimeout(() => {
+                this.globalService.state = "SIGNUP";
+                localStorage.setItem('verificationEmail', JSON.stringify(this.f.newEmail.value));
+                this.router.navigate(['/verification']); 
+              }, 1500);
           }
           else {
             this.loader = false;

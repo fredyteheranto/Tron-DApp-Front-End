@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, QueryList, Inject } from '@angular/core';
+import { Component, OnInit,AfterViewChecked, ElementRef, ViewChild, QueryList, Inject } from '@angular/core';
 import * as jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Router } from '@angular/router';
@@ -28,7 +28,7 @@ import adBlocker from 'just-detect-adblock';
     styleUrls: ['./myaccount.component.scss']
 })
 
-export class MyaccountComponent implements OnInit {
+export class MyaccountComponent implements OnInit, AfterViewChecked{
 
     //allergy spinner
     aSpin: boolean = false;
@@ -280,6 +280,16 @@ export class MyaccountComponent implements OnInit {
             
         } 
 
+    }
+
+    ngAfterViewChecked(): void {
+        //change percentage of graph
+        /* if(this.single[0].hasOwnProperty('value') && this.single[0].value != undefined){
+            let plel = this.eRef.nativeElement.querySelector('.percent-label');
+            plel.textContent = this.percentFormat(plel, this.single[0].value);
+            let lbl = this.eRef.nativeElement.querySelectorAll('text[ngx-charts-count-up]');
+            this.addTspan(lbl);
+        } */
     }
 
     addTspan(array) {

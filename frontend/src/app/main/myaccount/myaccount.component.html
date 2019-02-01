@@ -85,6 +85,10 @@
             <div *ngIf="user_role == 'Provider'" class="table-title" fxLayout.gt-md="row">
                 <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
                     <h1>PATIENT HEALTH RECORD</h1>
+                    <a class="account-link" routerLink="/update-account"><u>UPDATE ACCOUNT</u></a>
+                </div>
+                <div class="content-items right" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
+                    <a routerLink="/update-account"><u>UPDATE ACCOUNT</u></a>
                 </div>
             </div>
             <div *ngIf="user_role == 'Provider'" class="table-title block-sm" fxLayout.gt-md="row">
@@ -195,6 +199,7 @@
             <div *ngIf="user_role == 'Patient'" class="table-title" fxLayout.gt-md="row">
                 <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
                     <h1>MY HEALTH RECORD</h1>
+                    <a class="account-link" routerLink="/update-account"><u>UPDATE ACCOUNT</u></a>
                 </div>
                 <div class="content-items right" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
                     <a routerLink="/update-account"><u>UPDATE ACCOUNT</u></a>

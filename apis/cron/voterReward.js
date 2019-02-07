@@ -18,7 +18,7 @@ var options = {
 };
 //Cron Job Every Night at 11:50 PM
 var task = cron.schedule('0 0,6,12,18 * * *', async () => {
-    try {
+    try { return;
         //DB Queries
         [err, rewardObj] = await utils.to(db.models.reward_conf.findAll({
             where: {
@@ -140,7 +140,7 @@ function getCycleNoByTime(datetime) {
     if (hours >= 18 && hours < 24) return 4;
 }
 function startTask() {
-    task.start();
+    //task.start();
 }
 
 function endTask() {

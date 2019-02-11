@@ -14,9 +14,7 @@ jobs:
                 cd /var/www/html/healthport_patient_frontend
                 sudo git fetch
                 sudo git checkout staging
-                sudo git pull
-                sudo npm install
-                ng build --prod'
+                sudo git pull'
 workflows:
   version: 2
   deploy:

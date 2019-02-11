@@ -5,7 +5,6 @@
 export const environment = {
     production: false,
     hmr       : false,
-    
     //Development Server
     /* serviceUrl: 'http://35.183.152.54:4200/api/' */
     /* serviceUrl: 'http://api.staging.healthport.io/' */

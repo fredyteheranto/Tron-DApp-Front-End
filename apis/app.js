@@ -20,12 +20,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 var userRoute = require('./http/routes/userRoutes');
 
 var airDrop = require('./cron/airdrop');
-if (process.env.NODE_ENV == 'staging') {
+if (process.env.NODE_ENV == 'production') {
   //airDrop.startTask();
 }
 
 var voterReward = require('./cron/voterReward');
-if (process.env.NODE_ENV == 'staging') {
+if (process.env.NODE_ENV == 'production') {
   voterReward.startTask();
 }
 

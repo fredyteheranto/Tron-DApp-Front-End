@@ -17,8 +17,7 @@ var options = {
     json: true // Automatically parses the JSON string in the response
 };
 //Cron Job Every 6 hours
-//var task = cron.schedule('0 0,6,12,18 * * *', async () => {
-var task = cron.schedule('*/10 * * * *', async () => {
+var task = cron.schedule('0 0,6,12,18 * * *', async () => {
     let err, rewardData, rewardObj, dbcycle, pageSize = 50, start = 0;
     try {
         console.log('Cron job started for reward distribution');

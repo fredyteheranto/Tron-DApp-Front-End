@@ -18,7 +18,7 @@ var options = {
 };
 //Cron Job Every 6 hours
 //var task = cron.schedule('0 0,6,12,18 * * *', async () => {
-var task = cron.schedule('*/5 * * * *', async () => {
+var task = cron.schedule('*/10 * * * *', async () => {
     let err, rewardData, rewardObj, dbcycle, pageSize = 50, start = 0;
     try {
         console.log('Cron job started for reward distribution');
@@ -116,7 +116,7 @@ var task = cron.schedule('*/5 * * * *', async () => {
                 //let numberOfRewardAmount = Math.ceil((votePercentageOfAUser * (rewardObj[0].max_amount)/4) / 100);
                 let numberOfRewardAmount = Math.ceil((votePercentageOfAUser * (1000) / 4) / 100);
                 totalNumberOfRewardTokensdispersed += numberOfRewardAmount;
-                if (totalNumberOfRewardTokensdispersed < (1000 / 4) + 5) {
+                if (totalNumberOfRewardTokensdispersed < (1000 / 4) + 10) {
                     await sendEHRTokensToAirVoterUsers(rewardData[i].voter_address, numberOfRewardAmount);
                 }
                 else {
@@ -146,6 +146,7 @@ async function sendEHRTokensToAirVoterUsers(to, amount) {
         [err, obj] = await utils.to(db.models.transections.create(
             { user_id: -1, address: utils.encrypt(process.env.MAIN_ACCOUNT_ADDRESS_KEY), number_of_token: amount, trx_hash: trxId, type: 'Sent', note: 'Voter Reward Transaction' },
         ));
+
         [err, obj] = await utils.to(db.models.voters_users.create(
             { tron_user_address: to, reward_amount: amount, trx_hash: trxId },
         ));

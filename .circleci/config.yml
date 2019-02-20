@@ -22,7 +22,7 @@ jobs:
               - node_modules
       - run:
           name: ng build
-          command: npm run build
+          command: npm run build-prod
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}

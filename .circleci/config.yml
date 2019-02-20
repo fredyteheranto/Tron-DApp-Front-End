@@ -38,6 +38,13 @@ jobs:
             fingerprints:
               - $SSH_HOST_FINGERPRINT_STAGING
 
+      - restore_cache:
+                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+      - save_cache:
+          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+              - dist
+              
       - run:
           name: SSH Remove Frontend
           command: |
@@ -77,11 +84,13 @@ workflows:
             branches:
               only:
                 - staging
-                
+          requires:
+            - build_staging
+
       - deploy_staging:
           filters:
             branches:
               only:
                 - staging
           requires:
-            - build_staging
+            - delete_staging

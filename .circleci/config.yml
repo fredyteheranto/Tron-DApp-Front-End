@@ -1,26 +1,70 @@
 version: 2
-jobs: 
+jobs:
+  build_staging:
+    docker:
+      - image: circleci/node:10
+
+    working_directory: ~/healthport_patient_frontend
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+              - v1-dependencies-{{ checksum "package.json" }}
+              - v1-dependencies-
+      - run:
+          name: npm install
+          command: npm i
+      
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+              - node_modules
+      - run:
+          name: ng build
+          command: npm run build
+      # Cache the dist folder for the deploy job
+      - save_cache:
+          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+              - dist
+
   deploy_staging:
-    machine:
-      enabled: true
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/healthport_patient_frontend
+    user: root
     steps:
       - add_ssh_keys:
             fingerprints:
               - $SSH_HOST_FINGERPRINT_STAGING
+
+      - restore_cache:
+                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+
       - run:
-          name: SSH Deploy Staging
+          name: SSH Remove Frontend
           command: |
               ssh $SSH_USER@$SSH_HOST_STAGING bash -c '
-                cd /var/www/html/healthport_patient_frontend
-                sudo git fetch
-                sudo git checkout staging
-                sudo git pull'
+              sudo rm -rf /home/ubuntu/healthport_patient_frontend'   
+      - run:
+          name: SSH SCP on Staging for copy dist
+          command: scp -o StrictHostKeyChecking=no -r ./dist/ $SSH_USER@$SSH_HOST_STAGING:/home/ubuntu/healthport_patient_frontend
+              
+
 workflows:
   version: 2
-  deploy:
+  staging_build_deploy:
      jobs:
+      - build_staging:
+          filters:
+            branches:
+              only:
+                - staging
       - deploy_staging:
           filters:
             branches:
               only:
                 - staging
+          requires:
+            - build_staging

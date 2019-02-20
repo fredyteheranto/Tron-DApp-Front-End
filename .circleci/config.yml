@@ -22,13 +22,26 @@ jobs:
               - node_modules
       - run:
           name: ng build
-          command: npm run build-prod
+          command: npm run build
       # Cache the dist folder for the deploy job
       - save_cache:
           key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
               - dist
 
+  delete_staging:
+     steps:
+      - add_ssh_keys:
+            fingerprints:
+              - $SSH_HOST_FINGERPRINT_STAGING
+
+      - run:
+          name: SSH Remove Frontend
+          command: |
+              ssh $SSH_USER@$SSH_HOST_STAGING bash -c '
+                sudo rm -rf /home/ubuntu/healthport_patient_frontend' 
+
+      
   deploy_staging:
     docker:
       - image: circleci/node:10
@@ -42,11 +55,6 @@ jobs:
       - restore_cache:
                 key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
 
-      - run:
-          name: SSH Remove Frontend
-          command: |
-              ssh $SSH_USER@$SSH_HOST_STAGING bash -c '
-                sudo rm -rf /home/ubuntu/healthport_patient_frontend' 
       - run:
           name: SSH SCP on Staging for copy dist
           command: scp -o StrictHostKeyChecking=no -r ./dist/ $SSH_USER@$SSH_HOST_STAGING:/home/ubuntu/healthport_patient_frontend

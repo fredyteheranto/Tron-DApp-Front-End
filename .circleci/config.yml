@@ -173,6 +173,6 @@ workflows:
           filters:
             branches:
               only:
-                - live
+                - master
           requires:
             - delete_live

@@ -38,13 +38,6 @@ jobs:
             fingerprints:
               - $SSH_HOST_FINGERPRINT_STAGING
 
-      - restore_cache:
-                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-      - save_cache:
-          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
-          paths:
-              - dist
-              
       - run:
           name: SSH Remove Frontend
           command: |
@@ -67,7 +60,7 @@ jobs:
 
       - run:
           name: SSH SCP on Staging for copy dist
-          command: scp -o StrictHostKeyChecking=no -r ./dist/ $SSH_USER@$SSH_HOST_STAGING:/home/ubuntu/healthport_patient_frontend
+          command: scp -o StrictHostKeyChecking=no -r /home/circleci/healthport_patient_frontend/dist/ $SSH_USER@$SSH_HOST_STAGING:/home/ubuntu/healthport_patient_frontend
               
 
 workflows:

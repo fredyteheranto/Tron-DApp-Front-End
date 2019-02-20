@@ -1,0 +1,178 @@
+version: 2
+jobs:
+  build_staging:
+    docker:
+      - image: circleci/node:10
+
+    working_directory: ~/healthport_patient_frontend
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+              - v1-dependencies-{{ checksum "package.json" }}
+              - v1-dependencies-
+      - run:
+          name: npm install
+          command: npm i
+      
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+              - node_modules
+      - run:
+          name: ng build
+          command: npm run build-prod
+      # Cache the dist folder for the deploy job
+      - save_cache:
+          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+              - dist
+
+  delete_staging:
+    machine:
+      enabled: true
+
+    steps:
+      - add_ssh_keys:
+            fingerprints:
+              - $SSH_HOST_FINGERPRINT_STAGING
+
+      - run:
+          name: SSH Remove Frontend
+          command: |
+              ssh $SSH_USER@$SSH_HOST_STAGING bash -c '
+                sudo rm -rf /home/ubuntu/healthport_patient_frontend' 
+
+      
+  deploy_staging:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/healthport_patient_frontend
+    user: root
+    steps:
+      - add_ssh_keys:
+            fingerprints:
+              - $SSH_HOST_FINGERPRINT_STAGING
+
+      - restore_cache:
+                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+
+      - run:
+          name: SSH SCP on Staging for copy dist
+          command: scp -o StrictHostKeyChecking=no -r /home/circleci/healthport_patient_frontend/dist/ $SSH_USER@$SSH_HOST_STAGING:/home/ubuntu/healthport_patient_frontend
+              
+
+
+
+  build_live:
+    docker:
+      - image: circleci/node:10
+
+    working_directory: ~/healthport_patient_frontend
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+              - v1-dependencies-{{ checksum "package.json" }}
+              - v1-dependencies-
+      - run:
+          name: npm install
+          command: npm i
+      
+      - save_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+          paths:
+              - node_modules
+      - run:
+          name: ng build
+          command: npm run build-prod
+      # Cache the dist folder for the deploy job
+      - save_cache:
+          key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+              - dist
+
+  delete_live:
+    machine:
+      enabled: true
+
+    steps:
+      - add_ssh_keys:
+            fingerprints:
+              - $SSH_HOST_FINGERPRINT_STAGING
+
+      - run:
+          name: SSH Remove Frontend
+          command: |
+              ssh $SSH_USER@$SSH_HOST_LIVE bash -c '
+                sudo rm -rf /home/ubuntu/healthport_patient_frontend' 
+
+      
+  deploy_live:
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/healthport_patient_frontend
+    user: root
+    steps:
+      - add_ssh_keys:
+            fingerprints:
+              - $SSH_HOST_FINGERPRINT_STAGING
+
+      - restore_cache:
+                key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
+
+      - run:
+          name: SSH SCP on Live for copy dist
+          command: scp -o StrictHostKeyChecking=no -r ./dist/ $SSH_USER@$SSH_HOST_LIVE:/home/ubuntu/healthport_patient_frontend
+              
+
+
+workflows:
+  version: 2
+  staging_build_deploy:
+     jobs:
+      - build_staging:
+          filters:
+            branches:
+              only:
+                - staging
+      - delete_staging:
+          filters:
+            branches:
+              only:
+                - staging
+          requires:
+            - build_staging
+
+      - deploy_staging:
+          filters:
+            branches:
+              only:
+                - staging
+          requires:
+            - delete_staging
+
+  live_build_deploy:
+     jobs:
+      - build_live:
+          filters:
+            branches:
+              only:
+                - master
+      - delete_live:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - build_live
+
+      - deploy_live:
+          filters:
+            branches:
+              only:
+                - live
+          requires:
+            - delete_live

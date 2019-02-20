@@ -30,7 +30,10 @@ jobs:
               - dist
 
   delete_staging:
-     steps:
+    machine:
+      enabled: true
+
+    steps:
       - add_ssh_keys:
             fingerprints:
               - $SSH_HOST_FINGERPRINT_STAGING
@@ -69,6 +72,12 @@ workflows:
             branches:
               only:
                 - staging
+      - delete_staging:
+          filters:
+            branches:
+              only:
+                - staging
+                
       - deploy_staging:
           filters:
             branches:

@@ -263,6 +263,13 @@
                                     <button mat-raised-button class="btn-mcolor-green" (click)="shareProviderDialog('procedures')">SHARE</button>
                                 </td>
                             </tr>
+                            <tr *ngIf="pfLSDate !=='01/01/1970'">
+                                <td class="description left">SHARE ALL DOCUMENTS</td>
+                            
+                                <td class="download center" colspan="4">
+                                    <button mat-raised-button class="btn-mcolor-green" (click)="shareProviderDialog('all')">SHARE</button>
+                                </td>
+                            </tr>
                             <div *ngIf="user_admin">
                                 <tr>
                                     <td class="description left">APPLE HEALTH DATA</td>

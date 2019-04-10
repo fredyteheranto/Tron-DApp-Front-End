@@ -4,16 +4,16 @@
 
 export const environment = {
     production: false,
-    hmr       : false,
-    
+    hmr: false,
+
     //Development Server
     /* serviceUrl: 'http://35.183.152.54:4200/api/' */
-    serviceUrl: 'http://api.staging.healthport.io/'
-    /* serviceUrl: 'http://192.168.100.24:4200/' */
+    // serviceUrl: 'http://api.staging.healthport.io/'
+    serviceUrl: 'http://192.168.100.16:4200/'
 
     //Live Server
     /* serviceUrl: 'https://healthport.io/api/' */
-    /* serviceUrl: 'https://api.healthport.io/' */
+    // serviceUrl: 'https://api.healthport.io/'
 
 };
 

@@ -14,7 +14,7 @@ jobs:
               - v1-dependencies-
       - run:
           name: npm install
-          command: npm i
+          command: sudo npm i
       
       - save_cache:
           key: v1-dependencies-{{ checksum "package.json" }}

@@ -197,7 +197,6 @@ export class AboutComponent implements OnInit {
                         this.snackBar.open(res.message);
                     }
 
-
                 }, error => {
                     this.loader = false;
                     this.snackBar.open(error.error.message);

@@ -42,7 +42,7 @@ export class UpdateAccountComponent implements OnInit {
     this._fuseTranslationLoaderService.loadTranslations(english, turkish);
 
     this.titleService.setTitle("Update Account Email");
-    document.domain !='healthport.io'?this.meta.addTag({ name: 'robots', content: 'noindex' }):false;
+    document.domain != 'healthport.io' ? this.meta.addTag({ name: 'robots', content: 'noindex' }) : false;
     this.meta.addTags([
       { httpEquiv: 'Content-Type', content: 'text/html' },
       { charset: 'UTF-8' },
@@ -63,11 +63,28 @@ export class UpdateAccountComponent implements OnInit {
     });
   }
 
+  sendEmail() {
+    this.loader = true;
+    let verificationToken = JSON.parse(localStorage.getItem('userToken'));
+    this.userService.sendEmail(verificationToken)
+      .subscribe(res => {
+        if (res.code === 200) {
+          this.snackBar.open(res.message);
+          this.loader = false;
+        }
+      }, error => {
+        this.loader = false;
+        this.snackBar.open(error.error.message);
+
+      });
+  }
+
+
   get f() { return this.updateEmailForm.controls; }
 
   changeEmail() {
     this.loader = true;
-    
+
     if (this.updateEmailForm.invalid) {
       this.submitted = true;
       this.loader = false;
@@ -82,18 +99,18 @@ export class UpdateAccountComponent implements OnInit {
         this.loader = false;
         return;
       }
-      if(this.f.newEmail.value == this.currentEmail) {
+      if (this.f.newEmail.value == this.currentEmail) {
         this.loader = false;
         this.snackBar.open("Email already exists!");
         return;
       }
       let data = {
-        token : token,
-        userId : userId,
-        email : this.f.newEmail.value,
-        password : this.f.currentPassword.value
+        token: token,
+        userId: userId,
+        email: this.f.newEmail.value,
+        password: this.f.currentPassword.value
       }
-      
+
       //Save document service
       this.userService.updateAccountEmail(data)
         .subscribe(res => {
@@ -102,11 +119,11 @@ export class UpdateAccountComponent implements OnInit {
             this.snackBar.open(res.message);
             localStorage.clear();
             localStorage.setItem('verificationToken', JSON.stringify(res.token));
-              setTimeout(() => {
-                this.globalService.state = "SIGNUP";
-                localStorage.setItem('verificationEmail', JSON.stringify(this.f.newEmail.value));
-                this.router.navigate(['/verification']); 
-              }, 1500);
+            setTimeout(() => {
+              this.globalService.state = "SIGNUP";
+              localStorage.setItem('verificationEmail', JSON.stringify(this.f.newEmail.value));
+              this.router.navigate(['/verification']);
+            }, 1500);
           }
           else {
             this.loader = false;

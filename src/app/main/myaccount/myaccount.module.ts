@@ -22,7 +22,6 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { MatButtonModule, MatIconModule, MatCheckboxModule, MatRadioModule, MatTooltipModule, MatGridListModule, MatDialogModule, MatTableModule, MatPaginatorModule, MatSortModule, MatProgressSpinnerModule } from '@angular/material';
-import { HttpClientModule } from '@angular/common/http';
 
 const routes = [
     {
@@ -46,7 +45,6 @@ const routes = [
 
         ReactiveFormsModule,
         CommonModule,
-        HttpClientModule,
         // gets the scanner ready!
         ZXingScannerModule,
         MatButtonModule,

@@ -36,7 +36,7 @@
     "@ngrx/router-store": "6.0.1",
     "@ngrx/store": "6.0.1",
     "@ngrx/store-devtools": "6.0.1",
-    "@ngx-share/core": "^7.0.0",
+    "@ngx-share/core": "^6.0.1",
     "@ngx-translate/core": "10.0.2",
     "@swimlane/ngx-charts": "8.1.0",
     "@swimlane/ngx-datatable": "^13.0.1",

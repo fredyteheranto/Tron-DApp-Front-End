@@ -572,7 +572,7 @@
                                     </h2>
                                 </div>
                                 <div fxFlex="100" fxFlex.gt-xs="35" fxFlex.gt-sm="35" fxLayoutAlign="left left" (click)="openDetailsDialog(item)">
-                                    <h2 class="right-date">{{item.date_time | date:'MM/dd/yyyy'}}</h2>
+                                    <h2 class="right-date">{{item.date_time}}</h2>
                                 </div>
                                 <div fxFlex="100" fxFlex.gt-xs="25" fxFlex.gt-sm="25" fxLayoutAlign="left left" (click)="openDetailsDialog(item)">
                                     <h2 class="right-date" [ngClass]="{'send':applyDebitClass(item.type),'received':applyCreditClass(item.type)}" style="word-break: break-word;">{{item.type | uppercase}}</h2>
@@ -717,7 +717,7 @@
                                 </div>
                                 <div class="right-panel-right" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100"
                                     fxLayoutAlign="left left" (click)="openDetailsDialog(item)">
-                                    <h2 class="right-date">{{item.date_time | date:'MM/dd/yyyy'}}</h2>
+                                    <h2 class="right-date">{{item.date_time}}</h2>
                                 </div>
                                 <div class="right-panel-right" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100"
                                     fxLayoutAlign="left left" (click)="openDetailsDialog(item)">

@@ -47,7 +47,7 @@ export class MedicationlistComponent implements OnInit {
     this._fuseTranslationLoaderService.loadTranslations(english, turkish);
 
     this.titleService.setTitle("Update Medication List");
-    document.domain !='healthport.io'?this.meta.addTag({ name: 'robots', content: 'noindex' }):false;
+    document.domain != 'healthport.io' ? this.meta.addTag({ name: 'robots', content: 'noindex' }) : false;
     this.meta.addTags([
       { httpEquiv: 'Content-Type', content: 'text/html' },
       { charset: 'UTF-8' },
@@ -117,22 +117,24 @@ export class MedicationlistComponent implements OnInit {
 
   //clear and disable if noknown checkbox true
   clearFields(el) {
-    if(this.noKnownMedications) {
+    if (this.noKnownMedications) {
       this.clearFormArray(this.medicationData);
       this.medicationData.disable();
+      let sTop = document.getElementById('in-title');
+      sTop.scrollIntoView();
     }
     else {
       this.medicationData.enable();
       this.InitializeForm();
     }
-    el.scrollIntoView();
+    // el.scrollIntoView();
   }
 
   //Document Saving
   documentMedicationList() {
 
     this.loader = true;
-    
+
     if (this.medicationForm.invalid && !this.noKnownMedications) {
       this.submitted = true;
       this.loader = false;
@@ -147,9 +149,9 @@ export class MedicationlistComponent implements OnInit {
         this.loader = false;
         return;
       }
-      
-      if(this.noKnownMedications) {
-        this.docModel.documentObject = [{dose: "No Known Medication",frequency: "No Known Medication",name: "No Known Medication",physician: "No Known Medication"}];
+
+      if (this.noKnownMedications) {
+        this.docModel.documentObject = [{ dose: "No Known Medication", frequency: "No Known Medication", name: "No Known Medication", physician: "No Known Medication" }];
       }
       else {
         this.docModel.documentObject = this.medicationData.value;

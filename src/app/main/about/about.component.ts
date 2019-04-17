@@ -136,12 +136,14 @@ export class AboutComponent implements OnInit {
         if (this.noKnownAllergies) {
             this.clearFormArray(this.allergyData);
             this.allergyData.disable();
+            let sTop = document.getElementById('in-title');
+            sTop.scrollIntoView();
         }
         else {
             this.allergyData.enable();
             this.InitializeForm();
         }
-        el.scrollIntoView();
+        //  el.scrollIntoView();
     }
     moveTotop(e) {
         console.log(e.checked);

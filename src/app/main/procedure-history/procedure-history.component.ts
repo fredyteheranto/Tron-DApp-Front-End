@@ -103,12 +103,14 @@ export class ProcedureHistoryComponent implements OnInit {
     if (this.noKnownProcedures) {
       this.clearFormArray(this.procedureData);
       this.procedureData.disable();
+      let sTop = document.getElementById('in-title');
+      sTop.scrollIntoView();
     }
     else {
       this.procedureData.enable();
       this.InitializeForm();
     }
-    el.scrollIntoView();
+    // el.scrollIntoView();
   }
 
   //convert date to date object and then to local date

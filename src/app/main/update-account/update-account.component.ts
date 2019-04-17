@@ -20,6 +20,7 @@ export class UpdateAccountComponent implements OnInit {
   appData: Object;
   currentEmail: string;
   loader: boolean = false;
+  sendEmailLoader: boolean = false;
   submitted: boolean = false;
   updateEmailForm: FormGroup;
   public ValidationsClass: Validation;
@@ -64,16 +65,16 @@ export class UpdateAccountComponent implements OnInit {
   }
 
   sendEmail() {
-    this.loader = true;
+    this.sendEmailLoader = true;
     let verificationToken = JSON.parse(localStorage.getItem('userToken'));
     this.userService.sendEmail(verificationToken)
       .subscribe(res => {
         if (res.code === 200) {
           this.snackBar.open(res.message);
-          this.loader = false;
+          this.sendEmailLoader = false;
         }
       }, error => {
-        this.loader = false;
+        this.sendEmailLoader = false;
         this.snackBar.open(error.error.message);
 
       });

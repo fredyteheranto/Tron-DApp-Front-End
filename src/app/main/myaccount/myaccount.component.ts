@@ -110,7 +110,7 @@ export class MyaccountComponent implements OnInit, AfterViewChecked{
         'received':true,
         'new account':true,
         'loyalty bonus':true,
-        'referal reward':true,
+        'referral reward':true,
         'create allergy list':true,
         'create medication list':true,
         'create procedure history':true,
@@ -189,7 +189,6 @@ export class MyaccountComponent implements OnInit, AfterViewChecked{
             this.navigation = this._fuseNavigationService.getCurrentNavigation();
             this.navigation[6].title = this.globalService.state;
             this.navigation[6].id = "signout";
-            this.navigation[6].url = "/home"
         }
         
         //spinner sections until service response  

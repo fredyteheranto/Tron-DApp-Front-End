@@ -8,9 +8,18 @@ https://medium.com/@micklynch_6905/angular-6-a-simple-web-application-with-node-
 
 ## Development server
 
+Compatible node versions are >=8.9.0 and <=11.10.0
+
+Run `npm i` from your local project directory.
+
+In case of node_modules errors, remove `node_modules` directory by using command `rm -rf ./node_modules`.
+
+Also remove `package-lock.json` file by using command `rm -rf package-lock.json`.
+
+Now install fresh `node_modules` again by using command `npm i`.
+
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
-Run `node server.js` from the `./dist/out-src/src/server` folder to launch the API server. The API server is availalbe at `http://localhost:3000/api/`
 
 ## Code scaffolding
 

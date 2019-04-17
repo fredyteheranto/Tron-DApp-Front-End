@@ -18,9 +18,9 @@
             </div>
             <div fxLayout="column" fxLayout.gt-md="row" style="margin-top:15px;">
                 <div fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
-                    <button mat-raised-button *ngIf="!loader" (click)="sendEmail()" class="btn-mcolor-green btn-addmore">SEND
+                    <button mat-raised-button *ngIf="!sendEmailLoader" (click)="sendEmail()" class="btn-mcolor-green btn-addmore">SEND
                         EMAIL</button>
-                    <button mat-raised-button *ngIf="loader" (click)="sendEmail()" class="btn-mcolor-green btn-addmore">
+                    <button mat-raised-button *ngIf="sendEmailLoader" (click)="sendEmail()" class="btn-mcolor-green btn-addmore">
                         <mat-spinner strokeWidth="3" [diameter]="36"></mat-spinner>
                     </button>
                 </div>

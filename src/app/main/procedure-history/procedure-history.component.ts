@@ -45,7 +45,7 @@ export class ProcedureHistoryComponent implements OnInit {
     this._fuseTranslationLoaderService.loadTranslations(english, turkish);
 
     this.titleService.setTitle("Update Procedure History");
-    document.domain !='healthport.io'?this.meta.addTag({ name: 'robots', content: 'noindex' }):false;
+    document.domain != 'healthport.io' ? this.meta.addTag({ name: 'robots', content: 'noindex' }) : false;
     this.meta.addTags([
       { httpEquiv: 'Content-Type', content: 'text/html' },
       { charset: 'UTF-8' },
@@ -75,14 +75,14 @@ export class ProcedureHistoryComponent implements OnInit {
 
   //Initialize empty rows procedureForm  
   InitializeForm() {
-    this.procedureData.push(this.fb.group({ procedure: ['', Validators.required], date: ['', Validators.required]}));
-    this.procedureData.push(this.fb.group({ procedure: ['', Validators.required], date: ['', Validators.required]}));
+    this.procedureData.push(this.fb.group({ procedure: ['', Validators.required], date: ['', Validators.required] }));
+    this.procedureData.push(this.fb.group({ procedure: ['', Validators.required], date: ['', Validators.required] }));
   }
 
   //Add new row in procedureForm
   addMore() {
     this.submitted = false;
-    this.procedureData.push(this.fb.group({ procedure: ['', Validators.required], date: ['', Validators.required]}));
+    this.procedureData.push(this.fb.group({ procedure: ['', Validators.required], date: ['', Validators.required] }));
   }
 
   //Clear old form after successful saving document
@@ -100,15 +100,17 @@ export class ProcedureHistoryComponent implements OnInit {
 
   //clear and disable if noknown checkbox true
   clearFields(el) {
-    if(this.noKnownProcedures) {
+    if (this.noKnownProcedures) {
       this.clearFormArray(this.procedureData);
       this.procedureData.disable();
+      let sTop = document.getElementById('in-title');
+      sTop.scrollIntoView();
     }
     else {
       this.procedureData.enable();
       this.InitializeForm();
     }
-    el.scrollIntoView();
+    // el.scrollIntoView();
   }
 
   //convert date to date object and then to local date
@@ -139,7 +141,7 @@ export class ProcedureHistoryComponent implements OnInit {
 
   //Document Saving
   documentProcedureHistory() {
-    
+
     this.loader = true;
 
     if (this.procedureForm.invalid && !this.noKnownProcedures) {
@@ -156,9 +158,9 @@ export class ProcedureHistoryComponent implements OnInit {
         this.loader = false;
         return;
       }
-      
-      if(this.noKnownProcedures) {
-        this.docModel.documentObject = [{timestamp: "No Known Procedure",procedure: "No Known Procedure"}];
+
+      if (this.noKnownProcedures) {
+        this.docModel.documentObject = [{ timestamp: "No Known Procedure", procedure: "No Known Procedure" }];
       }
       else {
         this.docModel.documentObject = this.getSavingObject(this.procedureData.value);
@@ -167,7 +169,7 @@ export class ProcedureHistoryComponent implements OnInit {
       this.docModel.token = token;
       this.docModel.userId = userId;
       this.docModel.noKnownProcedures = this.noKnownProcedures;
-      
+
       //Save document service
       this.documentService.saveProcedureHistory(this.docModel)
         .subscribe(res => {

@@ -10,7 +10,8 @@ import { DocumentService } from '../../service/document.service';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { FuseTranslationLoaderService } from '@fuse/services/translation-loader.service';
 import { Router } from '@angular/router';
-
+import { DOCUMENT } from '@angular/platform-browser';
+import { Inject } from "@angular/core";
 
 @Component({
     selector: 'about',
@@ -51,6 +52,7 @@ export class AboutComponent implements OnInit {
      * @param {FuseTranslationLoaderService} _fuseTranslationLoaderService
      */
     constructor(
+        @Inject(DOCUMENT) private documentt: Document,
         private meta: Meta,
         private router: Router,
         private fb: FormBuilder,
@@ -64,7 +66,7 @@ export class AboutComponent implements OnInit {
         this._fuseTranslationLoaderService.loadTranslations(english, turkish);
 
         this.titleService.setTitle("Update Allergy Profile");
-        document.domain !='healthport.io'?this.meta.addTag({ name: 'robots', content: 'noindex' }):false;
+        document.domain != 'healthport.io' ? this.meta.addTag({ name: 'robots', content: 'noindex' }) : false;
         this.meta.addTags([
             { httpEquiv: 'Content-Type', content: 'text/html' },
             { charset: 'UTF-8' },
@@ -131,20 +133,31 @@ export class AboutComponent implements OnInit {
 
     //clear and disable if noknown checkbox true
     clearFields(el) {
-        if(this.noKnownAllergies) {
-        this.clearFormArray(this.allergyData);
-        this.allergyData.disable();
+        if (this.noKnownAllergies) {
+            this.clearFormArray(this.allergyData);
+            this.allergyData.disable();
+            let sTop = document.getElementById('in-title');
+            sTop.scrollIntoView();
         }
         else {
-        this.allergyData.enable();
-        this.InitializeForm();
+            this.allergyData.enable();
+            this.InitializeForm();
         }
-        el.scrollIntoView();
+        //  el.scrollIntoView();
+    }
+    moveTotop(e) {
+        console.log(e.checked);
+        document.getElementById('noKnownAllergiesCheckbox').scrollTop = 0;
+        window.scrollTo(0, 0);
+        if (e.checked === true) {
+
+        }
+        e.scrollIntoView();
     }
 
     //Document Saving
     documentAllergies() {
-        
+
         this.loader = true;
 
         if (this.allergyForm.invalid && !this.noKnownAllergies) {
@@ -161,8 +174,8 @@ export class AboutComponent implements OnInit {
                 this.loader = false;
                 return;
             }
-            if(this.noKnownAllergies) {
-                this.docModel.documentObject = [{category: "No Known Allergy",reactions: "No Known Allergy",severity: "No Known Allergy",substance: "No Known Allergy"}];
+            if (this.noKnownAllergies) {
+                this.docModel.documentObject = [{ category: "No Known Allergy", reactions: "No Known Allergy", severity: "No Known Allergy", substance: "No Known Allergy" }];
             }
             else {
                 this.docModel.documentObject = this.allergyData.value;

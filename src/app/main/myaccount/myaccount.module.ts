@@ -64,7 +64,7 @@ const routes = [
 
         FuseSharedModule,
 
-        ShareModule,
+        ShareModule.forRoot(),
 
         NgxDatatableModule,
         NgxPaginationModule

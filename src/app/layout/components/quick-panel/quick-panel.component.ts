@@ -44,7 +44,12 @@ export class QuickPanelComponent
                 this.navigation = this._fuseNavigationService.getCurrentNavigation();
             });        
     }
-    close() {
+    close(item) {
+        if(item.id == 'signout') {
+            localStorage.clear();
+            this.navigation[6].title = "SIGNUP";
+            this.navigation[6].id = "signup";
+        }
         this._fuseSidebarService.getSidebar('quickPanel').close();
     }
 }

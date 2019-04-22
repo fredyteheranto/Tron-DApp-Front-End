@@ -189,7 +189,6 @@ export class MyaccountComponent implements OnInit, AfterViewChecked{
             this.navigation = this._fuseNavigationService.getCurrentNavigation();
             this.navigation[6].title = this.globalService.state;
             this.navigation[6].id = "signout";
-            this.navigation[6].url = "/home"
         }
         
         //spinner sections until service response  

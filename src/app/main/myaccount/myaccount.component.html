@@ -85,10 +85,10 @@
             <div *ngIf="user_role == 'Provider'" class="table-title" fxLayout.gt-md="row">
                 <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
                     <h1>PATIENT HEALTH RECORD</h1>
-                    <a class="account-link" routerLink="/update-account"><u>UPDATE ACCOUNT</u></a>
+                    <a class="account-link" routerLink="/update-account"><u>ACCOUNT INFO</u></a>
                 </div>
                 <div class="content-items right" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
-                    <a routerLink="/update-account"><u>UPDATE ACCOUNT</u></a>
+                    <a routerLink="/update-account"><u>ACCOUNT INFO</u></a>
                 </div>
             </div>
             <div *ngIf="user_role == 'Provider'" class="table-title block-sm" fxLayout.gt-md="row">
@@ -199,10 +199,10 @@
             <div *ngIf="user_role == 'Patient'" class="table-title" fxLayout.gt-md="row">
                 <div class="content-items" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
                     <h1>MY HEALTH RECORD</h1>
-                    <a class="account-link" routerLink="/update-account"><u>UPDATE ACCOUNT</u></a>
+                    <a class="account-link" routerLink="/update-account"><u>ACCOUNT INFO</u></a>
                 </div>
                 <div class="content-items right" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100">
-                    <a routerLink="/update-account"><u>UPDATE ACCOUNT</u></a>
+                    <a routerLink="/update-account"><u>ACCOUNT INFO</u></a>
                 </div>
             </div>
             <div *ngIf="user_role == 'Patient'" class="table-body table1-large-820" fxLayout="column" fxLayout.gt-md="row" fxLayoutAlign="center center">
@@ -261,6 +261,13 @@
                                 </td>
                                 <td class="download center">
                                     <button mat-raised-button class="btn-mcolor-green" (click)="shareProviderDialog('procedures')">SHARE</button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="pfLSDate !=='01/01/1970'">
+                                <td class="description left">SHARE ALL DOCUMENTS</td>
+                            
+                                <td class="download center" colspan="4">
+                                    <button mat-raised-button class="btn-mcolor-green" (click)="shareProviderDialog('all')">SHARE</button>
                                 </td>
                             </tr>
                             <div *ngIf="user_admin">
@@ -565,7 +572,7 @@
                                     </h2>
                                 </div>
                                 <div fxFlex="100" fxFlex.gt-xs="35" fxFlex.gt-sm="35" fxLayoutAlign="left left" (click)="openDetailsDialog(item)">
-                                    <h2 class="right-date">{{item.date_time | date:'MM/dd/yyyy'}}</h2>
+                                    <h2 class="right-date">{{item.date_time}}</h2>
                                 </div>
                                 <div fxFlex="100" fxFlex.gt-xs="25" fxFlex.gt-sm="25" fxLayoutAlign="left left" (click)="openDetailsDialog(item)">
                                     <h2 class="right-date" [ngClass]="{'send':applyDebitClass(item.type),'received':applyCreditClass(item.type)}" style="word-break: break-word;">{{item.type | uppercase}}</h2>
@@ -710,7 +717,7 @@
                                 </div>
                                 <div class="right-panel-right" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100"
                                     fxLayoutAlign="left left" (click)="openDetailsDialog(item)">
-                                    <h2 class="right-date">{{item.date_time | date:'MM/dd/yyyy'}}</h2>
+                                    <h2 class="right-date">{{item.date_time}}</h2>
                                 </div>
                                 <div class="right-panel-right" fxFlex="100" fxFlex.gt-xs="100" fxFlex.gt-sm="100"
                                     fxLayoutAlign="left left" (click)="openDetailsDialog(item)">

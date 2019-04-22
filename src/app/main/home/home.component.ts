@@ -10,7 +10,6 @@ import { Meta, Title } from '@angular/platform-browser';
 import { UserService } from 'app/service/user.service';
 import { MatSnackBar, MatSpinner } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
 
 @Component({
     selector: 'home',
@@ -27,8 +26,6 @@ export class HomeComponent {
 
     @ViewChild(RecaptchaComponent) reCaptcha: RecaptchaComponent;
 
-    navigation: any;
-
     /**
      * Constructor
      *
@@ -42,7 +39,6 @@ export class HomeComponent {
         public snackBar: MatSnackBar,
         private userService: UserService,
         private activatedRoute: ActivatedRoute,
-        private _fuseNavigationService: FuseNavigationService,
         private _fuseTranslationLoaderService: FuseTranslationLoaderService
     ) {
         this._fuseTranslationLoaderService.loadTranslations(english, turkish);
@@ -59,13 +55,6 @@ export class HomeComponent {
     }
 
     ngOnInit() {
-        this.navigation = this._fuseNavigationService.getCurrentNavigation();
-        if (window.innerWidth < 1025 && this.navigation[6].id == "signout") {
-            localStorage.clear();
-            this.navigation[6].title = "SIGNUP";
-            this.navigation[6].id = "signup";
-            this.navigation[6].url = "/signup"
-        }
 
         this.activatedRoute.params.subscribe(params => this.id = params['id']);
         this.ncount = 0;

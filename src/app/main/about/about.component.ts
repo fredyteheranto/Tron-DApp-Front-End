@@ -152,6 +152,7 @@ export class AboutComponent implements OnInit {
         if (e.checked === true) {
 
         }
+        //e.scrollIntoView();
     }
 
     //Document Saving

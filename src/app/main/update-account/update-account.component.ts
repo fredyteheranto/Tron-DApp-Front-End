@@ -85,7 +85,6 @@ export class UpdateAccountComponent implements OnInit {
 
   changeEmail() {
     this.loader = true;
-
     if (this.updateEmailForm.invalid) {
       this.submitted = true;
       this.loader = false;

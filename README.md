@@ -1,10 +1,16 @@
-# Travelbudget
+# Healthport
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.1.
 
-Details on how this project was built, and detailed instructions on how to recreate have been published in the following article:
-https://medium.com/@micklynch_6905/angular-6-a-simple-web-application-with-node-and-postgresql-ee2a562887d6
+Following are the steps to clone and run project on your local machine
 
+## Clone 
+
+Run `https://github.com/Health-Port/Tron-DApp-Front-End.git` to clone with HTTPS
+
+OR
+
+Run `git@github.com:Health-Port/Tron-DApp-Front-End.git` to clone with SSH
 
 ## Development server
 

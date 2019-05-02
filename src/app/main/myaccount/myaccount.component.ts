@@ -110,7 +110,7 @@ export class MyaccountComponent implements OnInit, AfterViewChecked{
         'received':true,
         'new account':true,
         'loyalty bonus':true,
-        'referal reward':true,
+        'referral reward':true,
         'create allergy list':true,
         'create medication list':true,
         'create procedure history':true,
